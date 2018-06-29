@@ -1,0 +1,16 @@
+{
+    "name": "emmcall/mvc-fwk",
+    "description": "test mvc framework",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Emmanuel C.",
+            "email": "payfucallback@gmail.com"
+        }
+    ],
+    "minimum-stability": "beta",
+    "require": {
+        "php": ">=7.0"
+    }
+}
