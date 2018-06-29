@@ -7,18 +7,18 @@
 ## Composer
 
 ```
-composer require emmcall/mvc-fwk
+composer require emmcall/mvc-fwk-2
 ```
 
 ## Unix
 Move directories into the root.
 ```
-mv -u vendor/emmcall/mvc-fwk/* ./
+mv -u vendor/emmcall/mvc-fwk-2/* ./
 ```
 
 Move .gitignore and .htaccess files.
 ```
-mv -u vendor/emmcall/mvc-fwk/.* ./
+mv -u vendor/emmcall/mvc-fwk-2/.* ./
 ```
 
 Remove emmcall directory.
