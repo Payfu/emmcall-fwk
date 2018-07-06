@@ -72,9 +72,7 @@ class Route
     if(is_string($this->callable)){
       
       $params = explode(':', $this->callable);
-      
-      //var_dump($params);
-      
+           
       // Si $param = 3 il y a un bundle, si c'est 2 alors  il n'y en a pas
       if(count($params) == 3){
         // On appelle le bundle
@@ -86,16 +84,7 @@ class Route
         // On appelle le contrôleur
         $controller = "App\\Controller\\". $params[0] . "Controller";
         $method = $params[1];
-      }
-      
-      var_dump($controller);
-      echo "<br />";
-      var_dump(class_exists("\App\src\TestBundle\Controller\TestController"));
-      echo "<br />";
-      
-      
-      
-      
+      } 
       
       if (class_exists($controller)) {
         // On initialise le contrôleur

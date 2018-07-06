@@ -1,5 +1,5 @@
 <?php
-namespace App\src\Test\Controller;
+namespace App\src\TestBundle\Controller;
 
 use App;
 use App\src\AppController;
@@ -27,7 +27,7 @@ class TestController extends AppController
    * Les paramètres $username et $id sont retournés par la route donnée en exemple dans app/Routes/routes.yml. 
    * IMPORTANT: les paramètres doivent êtres présentés dans leur ordre de passage dans la route. $1, $2
    */
-  public function index()
+  public function index($var, $var2)
   {
     // NOTE : Ne pas oublier de créer une route 
     // Meta donnée
