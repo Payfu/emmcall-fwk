@@ -4,7 +4,6 @@ namespace Core\Router;
 use Core\Yaml\YamlParser;
 use Core\Router\Router;
 
-
 /**
  * Description of Routing
  * C'est ici que commence le système de routage
@@ -38,35 +37,34 @@ class Routing extends YamlParser
     $this->createRoute();  
   }
   
-  private function checkParams() : bool {
+  /*
+   * Contrôle tous les paramètres de toutes les routes
+   */
+  private function checkParams() {
     $array = $this->_array;
-        
+    
+    
     foreach($array as $k => $v)
     {
-      
       $routeName = $k;
       $tabRoute = $v;
+      
+      
+      
       // Gestion du PATH
       if( empty($tabRoute['path']) ){ $this->alertMsg("path", $routeName); } else { $this->_path = $tabRoute['path']; }
-
       if( empty($tabRoute['defaults']) ){ $this->alertMsg("defaults", $routeName); } else {   $this->_defaults = $tabRoute['defaults']; }
-
       if( empty($tabRoute['defaults']["_controller"]) ){ $this->alertMsg("_controller", $routeName); } else { $this->_controller = $tabRoute['defaults']["_controller"]; }
-
       // On regarde si requirements existe sinon la methode est = GET
       if(array_key_exists('requirements', $tabRoute)){
-
         // Si c'est le cas, on vérifie si _method et déféni, si ce n'est pas le cas alors c'est un GET par défaut
         if( !empty($tabRoute['requirements']["_method"]) ){ $this->_method = $tabRoute['requirements']["_method"]; } else { $this->_method = 'GET'; }
-
         // je vérifie toute les clefs qui ne commencent pas par "_", ce sont alors des noms de paramètre
         foreach($tabRoute['requirements'] as $nomParam => $valParam){
-
           //$nomParam[0] = premier caractère
           if($nomParam[0] != '_'){
             // Le nom paramètre clef ne peut pas être sans valeur
             if(empty($valParam)){ $this->alertMsg($nomParam, $routeName, 1); }
-
             // Le nom paramètre clef doit aussi se retrouver dans la chaîne de path, ex : {nomParam}
             if(!preg_match("/{{$nomParam}}/i", $tabRoute['path'])){ $this->alertMsg($nomParam, $routeName, 2); } else {
               $this->_params[$nomParam] = $valParam;
@@ -75,22 +73,53 @@ class Routing extends YamlParser
         }
       } 
       // sinon _method = GET
-      else { $this->_method = 'GET'; }
+      else { $this->_method = 'GET'; }  
       
-      return true;
+      // Gestion du PATH
+      /*
+      $router = new Router($this->_url);
+      $path = $defaults = $controller = $params=  '';
+      if( empty($tabRoute['path']) ){ $this->alertMsg("path", $routeName); } else { $path = $tabRoute['path']; }
+      if( empty($tabRoute['defaults']) ){ $this->alertMsg("defaults", $routeName); } else {   $defaults = $tabRoute['defaults']; }
+      if( empty($tabRoute['defaults']["_controller"]) ){ $this->alertMsg("_controller", $routeName); } else { $controller = $tabRoute['defaults']["_controller"]; }
+      // On regarde si requirements existe sinon la methode est = GET
+      if(array_key_exists('requirements', $tabRoute)){
+        // Si c'est le cas, on vérifie si _method et déféni, si ce n'est pas le cas alors c'est un GET par défaut
+        if( !empty($tabRoute['requirements']["_method"]) ){ $methode = $tabRoute['requirements']["_method"]; } else { $methode = 'GET'; }
+        // je vérifie toute les clefs qui ne commencent pas par "_", ce sont alors des noms de paramètre
+        foreach($tabRoute['requirements'] as $nomParam => $valParam){
+          //$nomParam[0] = premier caractère
+          if($nomParam[0] != '_'){
+            // Le nom paramètre clef ne peut pas être sans valeur
+            if(empty($valParam)){ $this->alertMsg($nomParam, $routeName, 1); }
+            // Le nom paramètre clef doit aussi se retrouver dans la chaîne de path, ex : {nomParam}
+            if(!preg_match("/{{$nomParam}}/i", $tabRoute['path'])){ $this->alertMsg($nomParam, $routeName, 2); } else {
+              $params[$nomParam] = $valParam;
+            }
+          }
+        }
+      } 
+      // sinon _method = GET
+      else { $methode = 'GET'; }  
+      $this->createRoute2($path, $methode, $controller, $params, $router);*/
     }
+    
+     // On lance la route
+    //$router->run();
   }
   
   /*
-   * Converti place les donnée de route dans les méthodes php et appelle les bundles associé
+   * Place les donnéee de route dans les méthodes php et appelle les bundles associé
    */
   private function createRoute(){
     $router = new Router($this->_url);
     $method = strtolower($this->_method);
-    
+        
     // On remplace /test/{username}/page/{id} => /test/:username/page/:id pour la gestion des paramètres
     $path  = str_replace('{', ':', str_replace('}', '', $this->_path));
-    
+      
+    var_dump($path);
+    echo "<br />";
     if($method === "get"){
       $laRoute = $router->get($path, $this->_controller);//->with('username', "[a-zA-Z]{2,150}")->with('id', "[0-9]{2,150}");
     } else {
@@ -108,6 +137,26 @@ class Routing extends YamlParser
     
     // On lance la route
     $router->run();
+  }
+  
+  private function createRoute2($path, $methode, $controller, $params, $router){
+    $method = strtolower($methode);
+        
+    // On remplace /test/{username}/page/{id} => /test/:username/page/:id pour la gestion des paramètres
+    $path  = str_replace('{', ':', str_replace('}', '', $path));
+    
+    if($method === "get"){
+      $laRoute = $router->get($path, $controller);//->with('username', "[a-zA-Z]{2,150}")->with('id', "[0-9]{2,150}");
+    } else {
+      //$router->post('/test', "Test:Index:maMethode");
+      $laRoute = $router->post($path, $controller);
+    }
+    
+    if(count($params) > 0){
+      foreach ($params as $nomParam => $regex) {        
+        $laRoute->with($nomParam, $regex);
+      }
+    }
   }
   
   /*

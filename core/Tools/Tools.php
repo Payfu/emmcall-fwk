@@ -1,16 +1,8 @@
 <?php
 namespace Core\Tools;
 
-
 /**
  * Fonctions diverses et utiles
- *
- * 16-06-2016 Ajout de keepWords()
- * 08-06-2016 Ajout de sendEmail()
- * 03-06-2016 Ajout de removeSpecChar()
- * 18-04-2016 Ajout de formatDateTime()
- * 
- *
  * @author EmmCall
  */
 class Tools
@@ -140,5 +132,15 @@ class Tools
         }
 
         return $var;
+    }
+    
+    /**
+     * Création d'un id unique
+     * 
+     * return string (len: 27) : 02da40d8f456ae570628802b731
+     */
+    public function generateId() : string
+    {
+        return bin2hex(random_bytes(7)).uniqid();
     }
 }

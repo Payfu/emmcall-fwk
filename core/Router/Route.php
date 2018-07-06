@@ -73,10 +73,12 @@ class Route
       
       $params = explode(':', $this->callable);
       
+      //var_dump($params);
+      
       // Si $param = 3 il y a un bundle, si c'est 2 alors  il n'y en a pas
       if(count($params) == 3){
         // On appelle le bundle
-        $controller = "App\\Src\\" . ucfirst($params[0]) . "Bundle\\Controller\\" . ucfirst($params[1]) . "Controller";
+        $controller = "App\\src\\" . ucfirst($params[0]) . "Bundle\\Controller\\" . ucfirst($params[1]) . "Controller";
         $method = $params[2];
       }
       
@@ -86,13 +88,22 @@ class Route
         $method = $params[1];
       }
       
+      var_dump($controller);
+      echo "<br />";
+      var_dump(class_exists("\App\src\TestBundle\Controller\TestController"));
+      echo "<br />";
+      
+      
+      
+      
+      
       if (class_exists($controller)) {
         // On initialise le contrôleur
         $controller = new $controller();
         // On appelle l'action (ou la méthode)
         return call_user_func_array([$controller, $method], $this->matches);   
       }else{
-        throw new RouterException("La classe suivante n'est pas trouvée : {$controller}");
+        throw new RouterException("<p>La classe suivante n'est pas trouvée : <strong>{$controller}</strong></p>");
       }
     }
     // On appel la fonction qui se trouve dans la route, ex : $router->get('/post', function(){  echo 'tous les articles'; });

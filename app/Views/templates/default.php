@@ -6,13 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="<?= $metaDescription ?>">
     <meta name="author" content="<?= App::getInstance()->author; ?>">
-    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="icon" type="image/png" href="picture/favicon.png" />
 
     <!-- Le css styles --> 
     <?php if(isset($scripts_css)){ echo $scripts_css; } ?>
     
   </head>
-  
   
   <body>
  

@@ -25,43 +25,22 @@ class Controller
 
 
     protected function render($view, $variables = [])
-    {
-        $content = '';
-        //var_dump($this->viewPath. str_replace('.', '/', $view));
-        ob_start();
-        
-        // Les variables récupéré ici sont utilisé en aval dans le template
-        extract($variables);
-        
-        // On charge le chemin de la page à afficher
-        require ($this->viewPath . str_replace('.', '/', $view) . '.php');
-        
-        // La variable $content est envoyée dans le template
-        $content = ob_get_clean();
-        
-        // On charge le template
-        require($this->templatePath . 'templates/' . $this->template . '.php');
-        
-    }
+    {      
+      $content = '';
+      //var_dump($this->viewPath. str_replace('.', '/', $view));
+      ob_start();
 
-    protected function renderJson($view, $variables = [])
-    {
-        $content = '';
-        
-        ob_start();
-        
-        // Les variables récupéré ici sont utilisé en aval dans le template
-        extract($variables);
-        
-        // On charge le chemin de la page à afficher
-        require ($this->viewPath . str_replace('.', '/', $view) . '.php');
+      // Les variables récupéré ici sont utilisé en aval dans le template
+      extract($variables);
 
-        // La variable $content est envoyée dans le template
-        $content = ob_get_clean();
+      // On charge le chemin de la page à afficher
+      require ($this->viewPath . str_replace('.', '/', $view) . '.php');
 
-        // On retourne la page dans un tableau pour Json, le echo est indispensable.
-        echo json_encode(["view"=>$content]);
-        
+      // La variable $content est envoyée dans le template
+      $content = ob_get_clean();
+
+      // On charge le template
+      require($this->templatePath . 'templates/' . $this->template . '.php'); 
     }
 
     /*
