@@ -1,5 +1,5 @@
 <?php
-namespace App\src\%name%\Controller;
+namespace App\src\%name%Bundle\Controller;
 
 use App;
 use App\src\AppController;
