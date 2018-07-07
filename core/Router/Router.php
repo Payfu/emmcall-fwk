@@ -24,6 +24,7 @@ class Router {
     // L'objet route permet de travailler plus simplement
     $route = new Route($path, $callable);
     
+		//print_r($route);
     // On crée un tableau indexé par la méthode GET ou POST
     $this->routes[$method][] = $route;
     
