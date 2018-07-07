@@ -1,11 +1,12 @@
-## Exemple de route : https://domaine.com/test/username/42
-
+# Route sans bundle
 index:
     path: /
     defaults: 
         # Controller:Methode
         _controller: home:index
 
+# Route avec bundle
+## Exemple de route : https://domaine.com/test/username/42
 nom_de_ma_route_exemple:
     path: /test/{username}/{id}
     defaults: 
@@ -16,8 +17,3 @@ nom_de_ma_route_exemple:
         id: "[0-9]{2}"
         # option facultative, GET par défaut
         _method:  GET
-
-
-
-
-
