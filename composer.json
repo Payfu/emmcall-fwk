@@ -1,6 +1,6 @@
 {
-    "name": "emmcall/mvc-fwk-2",
-    "description": "test mvc framework",
+    "name": "emmcall/emmcall-fwk",
+    "description": "Mvc framework with Bundles and Routes",
     "type": "project",
     "license": "MIT",
     "authors": [
@@ -11,6 +11,6 @@
     ],
     "minimum-stability": "beta",
     "require": {
-        "php": ">=7.0"
+        "php": ">=7.2"
     }
 }
