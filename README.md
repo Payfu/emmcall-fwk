@@ -1,4 +1,4 @@
-![EmmCall Logo](https://github.com/Payfu/emmcall-fwk/tree/master/public/favicon.png)
+![EmmCall Logo](https://github.com/Payfu/emmcall-fwk/blob/master/public/favicon.png?raw=true)
 
 # Note
 
