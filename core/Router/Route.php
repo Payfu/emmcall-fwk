@@ -5,7 +5,7 @@ namespace Core\Router;
 /**
  * Description of Route
  *
- * @author dev.hrteam
+ * @author Emm Call
  * Permet de représenter une route.
  */
 class Route
