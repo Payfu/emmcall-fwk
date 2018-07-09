@@ -7,6 +7,7 @@
     <meta name="description" content="<?= $metaDescription ?>">
     <meta name="author" content="<?= App::getInstance()->author; ?>">
     <link rel="icon" type="image/png" href="picture/favicon.png" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 
     <!-- Le css styles --> 
     <?php if(isset($scripts_css)){ echo $scripts_css; } ?>
@@ -18,13 +19,16 @@
     <!-- Nav Bar -->
 		
     <!-- container -->
-    <div class="container-fluid">
+    <div class="container">
         <?= $content; ?>
 	    	    
       <!-- Footer -->
-      <footer class="section-footer">
-        <p><strong><?= App::getInstance()->copyright; ?></strong></p>
-      </footer>
+      <div class="row">
+        <footer class="section-footer col-12 text-center">
+          <strong><?= App::getInstance()->copyright; ?></strong>
+        </footer>
+      </div>
+      
     </div>
 
     <!-- js scripts -->    
