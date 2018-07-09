@@ -1,6 +1,6 @@
 # Note
 
-**This my personal MVC project with bundles**
+**This my personal MVC project with bundles and routes**
 
 *It's less heavy than Symfony, it's not perfect, but it works well.*
 
