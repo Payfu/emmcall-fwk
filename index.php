@@ -26,8 +26,9 @@ $routing = new Routing($ymlFile, $page);
 $routing->routeManager();
 
 // Nous sommes en dev, une ligne rouge apparaît
+// Par principe on place les paramètres de bootstrap
 if(ENV === 'dev'){
-  echo '<div class="col bg-warning" style="background-color:#f00; position: fixed;
+  echo '<div class="col bg-danger" style="background-color:#f00; position: fixed;
         bottom: 0;
         right: 0;
         width: 100%;
