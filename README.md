@@ -1,3 +1,5 @@
+![EmmCall Logo](https://github.com/Payfu/emmcall-fwk/tree/master/public/favicon.png)
+
 # Note
 
 **This my personal MVC project with bundles and routes**
