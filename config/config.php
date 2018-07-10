@@ -8,7 +8,6 @@ return array(
   // Meta de la page d'accueil
   "title" => "EmmCall",
   "description" => "Framework MVC",
-
   "author" => "Emmanuel CALLEC",
   "lang"=>"fr",
 
