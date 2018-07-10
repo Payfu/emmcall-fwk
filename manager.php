@@ -35,7 +35,7 @@ if(ENV === 'dev'){
       <!-- Gestion des bundles -->
       <div class="row">
         <div class="col-md-6 my-3">
-          <h3>Crée un bundle</h3>
+          <h3>Créer un bundle</h3>
           <form id="bundleForm">
             <div class="form-group">
               <input type="text" class="form-control" id="bundleName" placeholder="Nom du bundle" autocomplete="off">
