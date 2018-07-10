@@ -21,9 +21,9 @@ class %name%Controller extends AppController
   }
 
   /**
-   * La methode render envoie la partie HTML, 
-   * cette methode se trouve dans le controller situé dans le core
-   * $this->Commandes est initialisé dans le constructeur avec $this->loadModel
+   * La méthode render envoie la partie HTML, 
+   * cette méthode se trouve dans le contrôleur situé dans le core
+   * $this->Commandes est initialisée dans le constructeur avec $this->loadModel
    * Les paramètres $username et $id sont retournés par la route donnée en exemple dans app/Routes/routes.yml. 
    * IMPORTANT: les paramètres doivent êtres présentés dans leur ordre de passage dans la route. $1, $2
    */
@@ -47,7 +47,7 @@ class %name%Controller extends AppController
 
     $data = array_merge($scripts, compact( 'metaTitle', 'metaDescription', 'token'));
 
-    // On envoi un tableau créé avec compact()
+    // On envoie un tableau créé avec compact()
     $this->render('index', $data);
   }
 }
