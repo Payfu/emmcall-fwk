@@ -15,8 +15,12 @@ class TestController extends AppController
 {
   public function __construct()
   {
-    // static::class = nom de la classe
-    parent::__construct(static::class);
+    /*
+     * la classe partente peut prendre deux paramètres
+     * @param1 = static::class = nom de la classe
+     * @param2 = string "nomDuNouveauTemplate" (optionnel) 
+     */
+    parent::__construct(static::class, null);
     //$this->loadModel('NomTable');
   }
 
