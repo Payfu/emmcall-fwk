@@ -21,8 +21,8 @@ class AppRootController extends Controller
     {
         $this->viewPath     = ROOT . '/app/Views/';
         $this->templatePath = ROOT . '/app/Views/';
-        $this->jsPath   = WEBROOT . 'scripts/js/';
-        $this->cssPath  = WEBROOT . 'scripts/css/';
+        $this->jsPath   = WEBROOT . '/scripts/js/';
+        $this->cssPath  = WEBROOT . '/scripts/css/';
     }
     
     /**
