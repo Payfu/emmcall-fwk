@@ -33,8 +33,8 @@ class AppController extends Controller
     $this->currentClass = $this->getBundleName($classChild);
     $this->viewPath     = ROOT    . '/app/src/'.$this->getBundleName($classChild).'/Views/';
     $this->templatePath = ROOT    . '/app/Views/';
-    $this->jsPath       = WEBROOT . 'scripts/js/';
-    $this->cssPath      = WEBROOT . 'scripts/css/';
+    $this->jsPath       = WEBROOT . '/scripts/js/';
+    $this->cssPath      = WEBROOT . '/scripts/css/';
   }
 
   /**
