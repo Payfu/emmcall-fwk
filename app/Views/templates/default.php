@@ -32,7 +32,7 @@
     </div>
 
     <!-- js scripts -->    
-		<?php if(isset($scripts_js)){ echo $scripts_js; } ?>
+    <?php if(isset($scripts_js)){ echo $scripts_js; } ?>
 
     <!-- Google analytics -->
   </body>
