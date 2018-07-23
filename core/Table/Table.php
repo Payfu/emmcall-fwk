@@ -43,19 +43,15 @@ class Table
     public function find($where = [])
     {
       foreach($where as $k => $v){
-        $attr_part[] = "$k = ?";
-        
-        /*
-        if(is_null($v)){
-          $v = COALESCE($k,'');
-        }*/
+        // Si je trouve une espace dans la clef alors c'est qu'il y a un opérateur ex ["nomClef !=" => "valeur"] 
+        $attr_part[] = (strpos($k, ' ')) ? "{$k} ?" : "$k = ?";
         
         $attributes[] = $v;
       }
         
       // implode = 'champ1 = ?, champ2 = ?'
       $attr_part = implode(' AND ', $attr_part);
-      //var_dump("SELECT * FROM {$this->table} WHERE {$attr_part} ", $attributes);
+      
       return $this->query("SELECT * FROM {$this->table} WHERE {$attr_part} ", $attributes, true ); // True : retourne un seul enregistrement 
     }
     
