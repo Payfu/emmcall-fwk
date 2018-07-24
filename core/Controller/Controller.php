@@ -61,9 +61,9 @@ class Controller
                 else{$url = $sanitize_name; $type = 'isNotUrl';}
 
                 if    ($ext === 'css' and $type === 'isUrl') { $scripts_css .= "\t".'<link rel="stylesheet" href="'.$url.'">'."\n"; }
-                elseif($ext === 'css' and $type === 'isNotUrl') { $scripts_css .= "\t".'<link rel="stylesheet" href="'.$this->cssPath.$url.'">'."\n"; }
+                elseif($ext === 'css' and $type === 'isNotUrl') { $scripts_css .= "\t".'<link rel="stylesheet" href="'.$this->cssPath.$url.'?'.uniqid().'">'."\n"; }
                 elseif( $ext === 'js' and $type === 'isUrl') { $scripts_js .= "\t".'<script src="'.$url.'"></script>'."\n"; }
-                elseif( $ext === 'js' and $type === 'isNotUrl') { $scripts_js .= "\t".'<script src="'.$this->jsPath.$url.'"></script>'."\n"; }
+                elseif( $ext === 'js' and $type === 'isNotUrl') { $scripts_js .= "\t".'<script src="'.$this->jsPath.$url.'?'.uniqid().'"></script>'."\n"; }
             }
         }
         return compact('scripts_js', 'scripts_css');
