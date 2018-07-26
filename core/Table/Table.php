@@ -154,9 +154,7 @@ class Table
     /*
      * Retourne tous les enregistrements
      * where = array : ["nomChamp"=>"valeur"]
-     * ["in"=> ["date", "2018-05-28, 2018-05-27, 2018-06-01"]] // NE MARCHE PAS !!!
-     * IN doit se trouver dans le where et non dans condition
-     * 
+     * ["in"=> ["date", "2018-05-28, 2018-05-27, 2018-06-01"]] 
      */
     public function all($where = null, $conditions = null)
     {
@@ -170,8 +168,15 @@ class Table
         $attributes = [];
 
         foreach($where as $k => $v){
-          $attr_part[] = "$k = ?";
-          $attributes[] = $v;
+          // IN : La requête préparée ne semble pas fonctionner
+          if($k == 'in'){
+            $attr_part[] = array_keys($where['in'])[0]." IN ( ".$where['in'][ array_keys($where['in'])[0] ]." )";
+            /*$attr_part[] = array_keys($where['in'])[0]." IN ( ? )"; // ex: "date IN ( ? )"
+            $attributes[] = $where['in'][ array_keys($where['in'])[0] ];*/
+          } else {
+            $attr_part[] = "$k = ?";
+            $attributes[] = $v;
+          }
         }
 
         $attr_part = implode(' AND ', $attr_part);
