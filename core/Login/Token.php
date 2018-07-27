@@ -41,7 +41,7 @@ class Token
   
   // Récupère le dernier chiffre
   $key = substr(date("s"), -1);
-  $key = ($key === 0) ? 1 : $key; // Key ne peut pas être égale à 0 sinon le random plus bas ne marche pas.
+  $key = ($key == 0) ? 1 : $key; // Key ne peut pas être égale à 0 sinon le random plus bas ne marche pas.
   
   // Encode l'URI
   $uri_encode =  bin2hex(base64_encode($uri));
