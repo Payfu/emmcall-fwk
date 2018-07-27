@@ -42,6 +42,9 @@ class Table
      */
     public function find($where = [])
     {
+      if(count($where) == 0){ die("<strong>La méthode find() ne peut être vide !</strong>");}
+      $attr_part = $attributes = [];
+        
       foreach($where as $k => $v){
         // Si je trouve une espace dans la clef alors c'est qu'il y a un opérateur ex ["nomClef !=" => "valeur"] 
         $attr_part[] = (strpos($k, ' ')) ? "{$k} ?" : "$k = ?";
