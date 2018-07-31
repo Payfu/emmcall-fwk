@@ -4,8 +4,6 @@ declare(strict_types=1); // Déclanche une erreur en cas de scalaire incorrect
 namespace App\src;
 
 use Core\Controller\Controller;
-use Core\Auth\DBAuth;
-use App\Controller\UserController;
 use App;
 
 
@@ -17,7 +15,6 @@ use App;
  */
 class AppController extends Controller
 {
-  
   /**
    * Initialisation des variables
    * Toutes ces variable sont lu dans core/controller/controller.php
@@ -33,8 +30,8 @@ class AppController extends Controller
     $this->currentClass = $this->getBundleName($classChild);
     $this->viewPath     = ROOT    . '/app/src/'.$this->getBundleName($classChild).'/Views/';
     $this->templatePath = ROOT    . '/app/Views/';
-    $this->jsPath       = WEBROOT . '/scripts/js/';
-    $this->cssPath      = WEBROOT . '/scripts/css/';
+    $this->jsPath       = WEBROOT . '/scripts/'.$this->getBundleName($classChild, true).'/js/';
+    $this->cssPath      = WEBROOT . '/scripts/'.$this->getBundleName($classChild, true).'/css/';
   }
 
   /**
@@ -48,9 +45,15 @@ class AppController extends Controller
 
   /**
    * Récupère le nom de la classe sans le chemin, ex : App\src\TestBundle\Controller\IndexController => TestBundle;
+   * @withoutName = bool, si true alors TestBundle = Test
    * return @string
    */
-  private function getBundleName(string $classChild) : string {
-    return explode('\\', $classChild)[2];
+  private function getBundleName(string $classChild, $withoutName = false) : string {
+    
+    if($withoutName == false){
+      return explode('\\', $classChild)[2];
+    } else {
+      return trim(explode('\\', $classChild)[2], 'Bundle');
+    }
   }
 }
