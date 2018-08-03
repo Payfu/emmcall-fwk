@@ -177,7 +177,8 @@ class Table
             /*$attr_part[] = array_keys($where['in'])[0]." IN ( ? )"; // ex: "date IN ( ? )"
             $attributes[] = $where['in'][ array_keys($where['in'])[0] ];*/
           } else {
-            $attr_part[] = "$k = ?";
+            // Si je trouve une espace dans la clef alors c'est qu'il y a un opérateur ex ["nomClef !=" => "valeur"] 
+            $attr_part[] = (strpos($k, ' ')) ? "{$k} ?" : "$k = ?";
             $attributes[] = $v;
           }
         }
