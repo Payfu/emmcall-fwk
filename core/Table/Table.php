@@ -162,9 +162,9 @@ class Table
     public function all($where = null, $conditions = null)
     {
       $sql_where = $attributes = '';
-      $in    = isset($conditions['in']) ? " AND ". $conditions['in'][0] ." IN ('".str_replace([',', ', '], "','",$conditions['in'][1])."')" : null;
       $order = isset($conditions['order']) ? "ORDER BY ".$conditions['order'] : null;
       $limit = isset($conditions['limit']) ? "LIMIT ".$conditions['limit'] : null;
+      $select = isset($conditions['select']) ? $conditions['select'] : "*";
 
       if ($where) {
         $sql_where = '';
@@ -191,7 +191,7 @@ class Table
         }
       }
 
-      return $this->query("SELECT * FROM {$this->table} {$sql_where} {$in} {$order} {$limit}", $attributes);
+      return $this->query("SELECT {$select} FROM {$this->table} {$sql_where} {$order} {$limit}", $attributes);
     }
     
     /**
