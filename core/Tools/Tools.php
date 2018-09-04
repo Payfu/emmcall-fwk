@@ -30,6 +30,18 @@ class Tools
 
         return $str;
     }
+    
+    /*
+     * Convertisseur de date
+     * $date = 04/05/1979
+     * $patternIn = "d/m/Y"
+     * $patternOut = "Y-m-d"
+     */
+    public function dateToDate(string $date, string $patternIn, string $patternOut ): string{
+      $d = \DateTime::createFromFormat($patternIn, $date);
+      return $d->format($patternOut);
+    }
+    
 
     /*
      * Suppression de TOUS les caractères spéciaux (accent inclus), on ne garde que les alphanum 
