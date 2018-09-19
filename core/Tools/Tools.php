@@ -42,6 +42,26 @@ class Tools
       return $d->format($patternOut);
     }
     
+    /*
+     * Récupère une date en fonction de sa définition en anglais.
+     * $date = 04/05/1979
+     * $english = "first day of this month"
+     * $patternOut = "Y-m-d"
+     */
+    public function dateFromString(string $date, string $english, string $patternOut): string{
+      $d = new \DateTime( $date );
+      $d->modify( $english );
+      return $d->format($patternOut);
+    }
+    
+    /*
+     * Y-m-d => jour 00 mois
+     * ou ce que l'on veut selon le format
+     */
+    public function dateToFr( string $date, $format="%A %d %B" ){
+      setlocale (LC_TIME, 'fr_FR.utf8','fra'); 
+      return strftime($format, strtotime($date));
+    }
 
     /*
      * Suppression de TOUS les caractères spéciaux (accent inclus), on ne garde que les alphanum 
