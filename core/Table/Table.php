@@ -1,7 +1,7 @@
 <?php
 namespace Core\Table;
 /**
- * J'appel pour le constructeur la connexion à la base de données se trouvant dans Core
+ * On appelle pour le constructeur la connexion à la base de données se trouvant dans Core
  */
 use Core\DataBase\DataBase; 
 
@@ -100,64 +100,100 @@ class Table
         return $this->query("UPDATE {$this->table} SET {$sql_part} WHERE {$attr_part} ", $attributes, true );
     }
     
+    /*
+     * Delete
+     */
     public function delete($id)
     {
       return $this->query("DELETE FROM {$this->table} WHERE id = ? ", [$id], true );
+    }
+    
+    /*
+     * Delete par paramètres
+     * $where ex : ['colonne1'=>'val1', 'colonne2'=>'val2']
+     */
+    public function deleteByParams($where, $debug = false)
+    {
+      foreach($where as $k => $v){
+            $attr_part[] = "$k = ?";
+            $attributes[] = $v;
+      }
+      
+      $attr_part = implode(' AND ', $attr_part);
+      
+      $sql = "DELETE FROM {$this->table} WHERE {$attr_part} ";
+      
+      if($debug){
+        echo "<pre>";
+        print_r($sql);
+        print_r($attributes);
+        echo "</pre>";
+        exit();
+      }
+      
+      return $this->query($sql, $attributes, true );
     }
     
     /**
     * Insert simple
     * $fields =  ['field'=>'value', 'field2'=>'value2']
     */
-    public function insert($fields)
+    public function insert($fields, $debug = false)
     {
       $sql_parts = [];
       $attributes = [];
-
+      
       foreach($fields as $k => $v){
-          $sql_parts[] = "$k = ?";
+          $sql_parts[] = $k;
+          $prepa[] = "?";
           $attributes[] = $v;
       }
 
       // implode = 'titre = ?, contenu = ?'
       $sql_part = implode(', ', $sql_parts);
-
-      return $this->query("INSERT INTO {$this->table} SET {$sql_part} ", $attributes, true );
+      $prepa = implode(', ', $prepa);
+      
+      $sql = "INSERT INTO {$this->table} ({$sql_part}) VALUES ({$prepa}) ";
+      
+      if($debug){
+        echo "<pre>";
+        print_r($sql);
+        print_r($attributes);
+        echo "</pre>";
+        exit();
+      }
+      
+      return $this->query($sql, $attributes, true );
     }
 
 
     /**
     * Insert multiple
     */
-    public function createMultiple()
+    public function insertMultiple()
     {
         /*
         $datafields = array('fielda', 'fieldb', ... );
-
         $data[] = array('fielda' => 'value', 'fieldb' => 'value' ....);
         $data[] = array('fielda' => 'value', 'fieldb' => 'value' ....);
         */
 
-        
     }
     
     public function extract($key, $value)
     {
         $records = $this->all();
-        
         $return = [];
-        
         foreach($records as $v){
            $return[$v->$key] = $v->$value;
         }
-        
         return $return;
     }
     
     /*
      * Retourne tous les enregistrements
      * where = array : ["nomChamp"=>"valeur"]
-     * ["in"=> ["date", "2018-05-28, 2018-05-27, 2018-06-01"]] 
+     * ["in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
      */
     public function all($where = null, $conditions = null)
     {
@@ -165,7 +201,7 @@ class Table
       $order = isset($conditions['order']) ? "ORDER BY ".$conditions['order'] : null;
       $limit = isset($conditions['limit']) ? "LIMIT ".$conditions['limit'] : null;
       $select = isset($conditions['select']) ? $conditions['select'] : "*";
-
+      
       if ($where) {
         $sql_where = '';
         $attributes = [];
@@ -174,8 +210,6 @@ class Table
           // IN : La requête préparée ne semble pas fonctionner
           if($k == 'in'){
             $attr_part[] = array_keys($where['in'])[0]." IN ( ".$where['in'][ array_keys($where['in'])[0] ]." )";
-            /*$attr_part[] = array_keys($where['in'])[0]." IN ( ? )"; // ex: "date IN ( ? )"
-            $attributes[] = $where['in'][ array_keys($where['in'])[0] ];*/
           } else {
             // Si je trouve une espace dans la clef alors c'est qu'il y a un opérateur ex ["nomClef !=" => "valeur"] 
             $attr_part[] = (strpos($k, ' ')) ? "{$k} ?" : "$k = ?";
@@ -190,7 +224,7 @@ class Table
           $sql_where = "WHERE {$attr_part}";    
         }
       }
-
+      
       return $this->query("SELECT {$select} FROM {$this->table} {$sql_where} {$order} {$limit}", $attributes);
     }
     
