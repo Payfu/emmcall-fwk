@@ -165,8 +165,7 @@ class Table
       
       return $this->query($sql, $attributes, true );
     }
-
-
+    
     /**
     * Insert multiple
     */
@@ -177,7 +176,6 @@ class Table
         $data[] = array('fielda' => 'value', 'fieldb' => 'value' ....);
         $data[] = array('fielda' => 'value', 'fieldb' => 'value' ....);
         */
-
     }
     
     public function extract($key, $value)
@@ -194,13 +192,15 @@ class Table
      * Retourne tous les enregistrements
      * where = array : ["nomChamp"=>"valeur"]
      * ["in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
+     * ["not-in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
      */
     public function all($where = null, $conditions = null)
     {
       $sql_where = $attributes = '';
-      $order = isset($conditions['order']) ? "ORDER BY ".$conditions['order'] : null;
-      $limit = isset($conditions['limit']) ? "LIMIT ".$conditions['limit'] : null;
-      $select = isset($conditions['select']) ? $conditions['select'] : "*";
+      $order  = isset($conditions['order'])   ? "ORDER BY {$conditions['order']}" : null;
+      $limit  = isset($conditions['limit'])   ? "LIMIT {$conditions['limit']}" : null;
+      $top    = isset($conditions['top'])     ? "TOP ({$conditions['top']}) " : null;
+      $select = isset($conditions['select'])  ? $conditions['select'] : "*";
       
       if ($where) {
         $sql_where = '';
@@ -210,13 +210,14 @@ class Table
           // IN : La requête préparée ne semble pas fonctionner
           if($k == 'in'){
             $attr_part[] = array_keys($where['in'])[0]." IN ( ".$where['in'][ array_keys($where['in'])[0] ]." )";
+          } else if($k == 'not-in'){
+            $attr_part[] = array_keys($where['not-in'])[0]." NOT IN ( ".$where['not-in'][ array_keys($where['not-in'])[0] ]." )";
           } else {
             // Si je trouve une espace dans la clef alors c'est qu'il y a un opérateur ex ["nomClef !=" => "valeur"] 
             $attr_part[] = (strpos($k, ' ')) ? "{$k} ?" : "$k = ?";
             $attributes[] = $v;
           }
         }
-
         $attr_part = implode(' AND ', $attr_part);
 
         if($where)
@@ -225,7 +226,7 @@ class Table
         }
       }
       
-      return $this->query("SELECT {$select} FROM {$this->table} {$sql_where} {$order} {$limit}", $attributes);
+      return $this->query("SELECT {$top} {$select} FROM {$this->table} {$sql_where} {$order} {$limit}", $attributes);
     }
     
     /**
