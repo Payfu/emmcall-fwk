@@ -49,11 +49,10 @@ class AppController extends Controller
    * return @string
    */
   private function getBundleName(string $classChild, $withoutName = false) : string {
-    
     if($withoutName == false){
       return explode('\\', $classChild)[2];
     } else {
-      return trim(explode('\\', $classChild)[2], 'Bundle');
+      return preg_replace("/Bundle/", "", explode('\\', $classChild)[2]);
     }
   }
 }
