@@ -1,10 +1,6 @@
 <?php
 namespace Core\Controller;
-
-/*
-    10-06-2016 : Ajout de filter_var URL dans scripts();
-*/
-
+use Core\Router\Routing;
 
 /**
  * Description of Controller
@@ -42,6 +38,17 @@ class Controller
       // On charge le template
       require($this->templatePath . 'templates/' . $this->template . '.php'); 
     }
+    
+    /*
+     * On tape le nom d'une route et il récupère le chemin "path"
+     * @routeName = nom de la route
+     * @$params = tableau des paramètres GET de la route
+     */
+    protected function redirect($routeName, array $params = null){
+      $ymlFile = ROOT."/app/Routes/routes.yml";
+      $r  = new Routing($ymlFile, null);
+      $r->redirectManager($routeName, $params);
+    }
 
     /*
      * Appel des scripts JS et CSS en fonction des pages
@@ -69,9 +76,6 @@ class Controller
         return compact('scripts_js', 'scripts_css');
     }
 
-
-    
-    
     /**
      * Renvoie les bon header en fonction de la situation
      */
