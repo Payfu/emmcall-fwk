@@ -30,9 +30,9 @@ class Routing extends YamlParser
   }
   
   /*
-   * NOTE : Par la suite il faudra une gestion des paramètres 
+   * Redirection 
    */
-  public function redirectManager($routeName, $params = null){
+  public function redirectManager($routeName, $params = null, $redirect = true){
     // On récupère le path de la route du nom X
     if(!array_key_exists($routeName, $this->_array) ){
       die("La route n'existe pas : <strong>{$routeName}</strong>");
@@ -54,7 +54,12 @@ class Routing extends YamlParser
     }
     
     // On lance la redirection
-    header("Location: {$chemin}");    
+    if($redirect){
+      header("Location: {$chemin}");
+    } else {
+      return $chemin;
+    }
+    
   }
   
   /*
