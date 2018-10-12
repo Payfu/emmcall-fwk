@@ -44,10 +44,9 @@ class Controller
      * @routeName = nom de la route
      * @$params = tableau des paramètres GET de la route
      */
-    protected function redirect($routeName, array $params = null){
-      $ymlFile = ROOT."/app/Routes/routes.yml";
-      $r  = new Routing($ymlFile, null);
-      $r->redirectManager($routeName, $params);
+    protected function redirect($routeName, $params = null, bool $redirect=true){
+      $r  = new Routing($this->_ymlFile, null);
+      return $r->redirectManager($routeName, $params, $redirect);
     }
 
     /*
