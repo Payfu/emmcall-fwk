@@ -6,6 +6,7 @@
 return array(
 	
   // Meta de la page d'accueil
+  "site_name" => "EmmCall",
   "title" => "EmmCall",
   "description" => "Framework MVC",
 
@@ -24,6 +25,4 @@ return array(
   // Contact
   "contact_destinataire"=>"contact@domaine.com",
   "contact_objet"=>"Message en provenance du site Name"
-	
 );
-
