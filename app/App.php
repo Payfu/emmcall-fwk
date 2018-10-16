@@ -20,6 +20,7 @@ use Core\DataBase\MysqlDataBase;
 
 class App
 {
+  public $site_name;
   public $title;
   public $description;
   public $keywords;
@@ -28,6 +29,7 @@ class App
   public $copyright;
 
   public $contact_destinataire;
+  public $contact_objet;
   private $db_instance;
   private static $_instance;
 
@@ -38,6 +40,7 @@ class App
   {
     $config = Config::getInstance(ROOT . '/config/config.php');
 
+    $this->site_name    = $config->get('site_name');
     $this->title        = $config->get('title');
     $this->description  = $config->get('description');
     $this->keywords     = $config->get('keywords');
