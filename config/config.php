@@ -17,6 +17,7 @@ return array(
   "copyright"=>"20xx - " . date('Y') . "  © Name",
 
   // BDD
+  "db_type" => "mysql",
   "db_user" => "root",
   "db_pass" => "",
   "db_name" => "db_database",
