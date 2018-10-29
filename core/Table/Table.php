@@ -1,4 +1,5 @@
 <?php
+// Dernière maj : 29/10/2018 : modification de la méthode find (ajout de $condition et $debug)
 namespace Core\Table;
 /**
  * On appelle pour le constructeur la connexion à la base de données se trouvant dans Core
@@ -38,12 +39,15 @@ class Table
      * On va chercher un résultat sur un ou pluieurs champs
      * 
      * @param array $where : field => value
+     * select = list des champs ) mettre dans le select
      * @return false s'il ne trouve rien
      */
-    public function find($where = [])
+    public function find($where = [], $conditions = null, $debug = false)
     {
       if(count($where) == 0){ die("<strong>La méthode find() ne peut être vide !</strong>");}
       $attr_part = $attributes = [];
+      
+      $select = isset($conditions['select'])  ? $conditions['select'] : "*";
         
       foreach($where as $k => $v){
         // Si je trouve une espace dans la clef alors c'est qu'il y a un opérateur ex ["nomClef !=" => "valeur"] 
@@ -55,7 +59,17 @@ class Table
       // implode = 'champ1 = ?, champ2 = ?'
       $attr_part = implode(' AND ', $attr_part);
       
-      return $this->query("SELECT * FROM {$this->table} WHERE {$attr_part} ", $attributes, true ); // True : retourne un seul enregistrement 
+      $sql = "SELECT {$select} FROM {$this->table} WHERE {$attr_part} ";
+      
+      if($debug){
+        echo "<pre>";
+        print_r($sql);
+        print_r($attributes);
+        echo "</pre>";
+        exit();
+      }
+      
+      return $this->query($sql, $attributes, true );
     }
     
     /**
