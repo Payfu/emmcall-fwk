@@ -17,6 +17,7 @@ class Controller
     protected $templatePath;
     protected $jsPath;
     protected $cssPath;
+    protected $_ymlFile = ROOT."/app/Routes/routes.yml";
 
 
 
@@ -48,7 +49,7 @@ class Controller
       $r  = new Routing($this->_ymlFile, null);
       return $r->redirectManager($routeName, $params, $redirect);
     }
-
+    
     /*
      * Appel des scripts JS et CSS en fonction des pages
      * Avec la syntaxe suivante : $tab = $this->scripts(['upload.css', 'upload.js', 'https://domaine.fr/script.min.js']);
