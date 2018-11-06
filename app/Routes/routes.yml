@@ -17,3 +17,8 @@ nom_de_ma_route_exemple:
         id: "[0-9]{2}"
         # option facultative, GET par défaut
         _method:  GET
+
+# Importer un fichier route. On indique le nom du fichier sans le .yml
+# toujours le mettre à la fin.
+#import@: 
+#   - nomDuFichier
