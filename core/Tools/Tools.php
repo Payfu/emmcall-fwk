@@ -57,10 +57,12 @@ class Tools
     /*
      * Y-m-d => jour 00 mois
      * ou ce que l'on veut selon le format
+     * http://php.net/manual/fr/function.strftime.php
+     * strftime gérant mal les lettres accentuées on y ajoute un utf8_encode
      */
     public function dateToFr( string $date, $format="%A %d %B" ){
       setlocale (LC_TIME, 'fr_FR.utf8','fra'); 
-      return strftime($format, strtotime($date));
+      return utf8_encode(strftime($format, strtotime($date)));
     }
 
     /*
