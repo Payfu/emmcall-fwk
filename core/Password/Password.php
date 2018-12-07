@@ -22,12 +22,12 @@ class Password
       
       if($type == 'alphanum'){
         $v = [$this->getAlphaMin(), $this->getAlphaMaj(), $this->getNumeric()];
-        $str .= $v[rand(0,3)];
+        $str .= $v[rand(0,2)];
       }
       
       if($type == 'alpha'){
         $v = [$this->getAlphaMin(), $this->getAlphaMaj()];
-        $str .= $v[rand(0,3)];
+        $str .= $v[rand(0,1)];
       }
     }
     return str_shuffle($str);
