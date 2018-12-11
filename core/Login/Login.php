@@ -15,4 +15,19 @@ class Login extends Token
  public function getToken() : string {		
   return $this->_instanceToken->generateToken();		
  }
+ 
+ /**
+  * Déconnexion
+  * Destruction du cookie et de la session
+  */
+  public function logout(string $cookie_name = null)
+  {   
+    if (isset($_COOKIE[$cookie_name])) { 
+      unset($_COOKIE[$cookie_name]);
+      setcookie($cookie_name, null, -1, '/');
+    }
+
+    $_SESSION = array();
+    session_destroy();    
+  }
 }
