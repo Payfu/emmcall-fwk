@@ -229,22 +229,13 @@ class Table
    */
   public function query($statement, $attributes = null, $one = false)
   {
-    if($attributes)
-    {
-      return $this->db->prepare(
-        $statement, 
-        $attributes, 
-        str_replace('Table', 'Entity', get_class($this)), 
-        $one
-      );
-    }
-    else
-    {
-      return $this->db->query(
-        $statement, 
-        str_replace('Table', 'Entity', get_class($this)), 
-        $one
-      );
+    // J'ai modifié les requêtes pour retirer l'appel au dossier Entity qui deviendra obsolète
+    if($attributes){
+      /*return $this->db->prepare($statement, $attributes, str_replace('Table', 'Entity', get_class($this)), $one);*/
+      return $this->db->prepare($statement, $attributes, null, $one);
+    } else {
+      /*return $this->db->query($statement, str_replace('Table', 'Entity', get_class($this)), $one);*/
+      return $this->db->query($statement, null, $one);
     }
   }
   
