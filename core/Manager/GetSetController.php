@@ -16,6 +16,7 @@ class GetSetController
   private $_db_type;
   private $_nom_base;
   private $_nom_table;
+  private $_nom_table_format;
   private $_columns;
   private $_attributes;
   private $_constructor;
@@ -32,6 +33,8 @@ class GetSetController
     $c = Config::getInstance('./../../config/config.php');
     $this->_db = new Core\DataBase\MysqlDataBase($c->get('db_name'),$c->get('db_user'),$c->get('db_pass'),$c->get('db_host'),$c->get('db_type'));
     $this->_nom_table = $nomTable;
+    // NOM_TABLE => NomTable
+    $this->_nom_table_format = str_replace(' ', '', ucwords(str_replace('_', " ", strtolower($nomTable))));
     $this->_nom_base = $c->get('db_name');
     $this->_db_type = $c->get('db_type');
   }
@@ -59,7 +62,9 @@ class GetSetController
       if($v->DATA_TYPE == 'varchar'){ $dataType = 'string'; } 
       else if ($v->DATA_TYPE == 'int'){ $dataType = 'int'; }
       else{ $dataType = null; }
-            
+      
+      // DATE_NAISSANCE => DateNaissance
+      //$columnNameFormat = str_replace(' ', '', ucwords(str_replace('_', " ", strtolower($v->COLUMN_NAME))));
       $columns[$v->COLUMN_NAME] = $dataType;
     }
     $this->_columns = $columns;
@@ -86,7 +91,7 @@ class GetSetController
   public function __construct()
   {
     parent::__construct(static::class, null);
-    $this->loadModel(\''.$this->_nom_table.'\');
+    $this->loadModel(\''.$this->_nom_table_format.'\');
   }';
   }
   
@@ -97,7 +102,7 @@ class GetSetController
     $str = '';
     foreach ($this->_columns as $k=>$v) {
       // nom_du_champ => NomDuChamp
-      $fieldNameFormat = str_replace(' ', '', ucwords(str_replace('_', " ", $k)));
+      $fieldNameFormat = str_replace(' ', '', ucwords(str_replace('_', " ", strtolower($k))));
       
       // Return type
       $returnType = isset($v) ? ' : '.$v : '';
@@ -135,7 +140,7 @@ class GetSetController
   * Récupération de l\'entité
   */
   public function getEntity($arrayData){
-    $t = '.ucfirst ($this->_nom_table).';
+    $t = $this->'.$this->_nom_table_format.';
     $f = $t->find($arrayData);
 
     if(!$f){ return false; }
@@ -161,7 +166,7 @@ class GetSetController
   * On crée l\'entité une fois que tous les set sont hydratés
   */
   public function createEntity(){
-    $t = '.ucfirst ($this->_nom_table).';
+    $t = $this->'.$this->_nom_table_format.';
     $isExist = $t->find(["id"=> $this->_id]);
 
     // S\'il existe déjà
@@ -183,7 +188,7 @@ class GetSetController
   * On récupère toutes les entités
   */
   public function getEntities(array $where = null, array $cond = ["order"=>"id ASC"]){
-    $t = '.ucfirst ($this->_nom_table).';
+    $t = $this->'.$this->_nom_table_format.';
     return $t->all($where,$cond);
   }';
   }
@@ -208,7 +213,7 @@ class GetSetController
   * On met à jour l\'entité une fois que tous les set sont hydratés
   */
   public function updateEntity(){
-    $t = '.ucfirst ($this->_nom_table).';
+    $t = $this->'.$this->_nom_table_format.';
     $valid = $t->find(["id"=> $this->_id]); 
 
     // Si l\'id n\'existe pas
@@ -229,7 +234,7 @@ class GetSetController
   * Supprimer
   */
   public function deleteEntity(){
-    $t = '.ucfirst ($this->_nom_table).';
+    $t = $this->'.$this->_nom_table_format.';
     return $t->delete($this->_id);
   }';
   }
