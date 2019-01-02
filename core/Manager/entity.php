@@ -18,10 +18,9 @@ if(ENV === 'dev'){
       echo json_encode($data);
       exit();
     }
-    
     // Formate le_nom_de_la_table en LeNomDeLaTable et on garde les deux valeurs.
     $nomTableUnformat = $_POST['entityName'];
-    $nomTableFormat   = str_replace(' ', '', ucwords(str_replace('_', " ", $nomTableUnformat)));
+    $nomTableFormat   = str_replace(' ', '', ucwords(str_replace('_', " ", strtolower($nomTableUnformat))));
     
     $nomBundle = $_POST['listBundle'];
     
@@ -105,10 +104,4 @@ if(ENV === 'dev'){
     
     echo json_encode($data);
   } 
-  
-  
-  
-  
-  
 }
-
