@@ -13,6 +13,7 @@ use Core\Config;
 class GetSetController
 {
   private $_db;
+  private $_db_type;
   private $_nom_base;
   private $_nom_table;
   private $_columns;
@@ -32,13 +33,16 @@ class GetSetController
     $this->_db = new Core\DataBase\MysqlDataBase($c->get('db_name'),$c->get('db_user'),$c->get('db_pass'),$c->get('db_host'),$c->get('db_type'));
     $this->_nom_table = $nomTable;
     $this->_nom_base = $c->get('db_name');
+    $this->_db_type = $c->get('db_type');
   }
   
   /*
    * On vérifie que la table existe bien.
    */
   public function isTableExist(){
-    $res = $this->_db->query("SELECT * FROM information_schema.tables WHERE table_schema = '{$this->_nom_base}' AND table_name = '{$this->_nom_table}' LIMIT 1");
+    // Si c'est un sqlsrv le nom de la base est sur table_catalog sinon c'est table_schema 
+    $db_type = ($this->_db_type == 'sqlsrv') ? 'table_catalog' : 'table_schema';
+    $res = $this->_db->query("SELECT * FROM information_schema.tables WHERE {$db_type} = '{$this->_nom_base}' AND table_name = '{$this->_nom_table}' ");
     return (count($res) != 0) ? true : false;
   }
   
@@ -245,7 +249,6 @@ class GetSetController
     $this->createUpdateEntity(); 
     $this->createDeleteEntity();
     
-    
     return "
       {$this->_attributes}
         
@@ -263,10 +266,5 @@ class GetSetController
         
       {$this->_delete_entity}
       ";
-  }
-  
-  
-  
-  
-  
+  }  
 }
