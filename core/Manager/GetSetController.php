@@ -54,8 +54,9 @@ class GetSetController
    * On place le tout dans un tableau multi avec comme clef le nom de la colonne et comme valeur son type (php et non sql).
    */
   private function listFields(){
-    $res = $this->_db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{$this->_nom_table}'");
-    //var_dump($res);
+    $db_type = ($this->_db_type == 'sqlsrv') ? 'TABLE_CATALOG' : 'TABLE_SCHEMA';
+    $res = $this->_db->query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE {$db_type} = '{$this->_nom_base}' AND TABLE_NAME = '{$this->_nom_table}'");
+    
     $columns = [];
     $dataType = null;
     foreach($res as $v){
