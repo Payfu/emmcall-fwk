@@ -1,19 +1,20 @@
 <?php
 declare(strict_types=1);
 
-ini_set('display_errors', '1');
 use Core\Router\Routing;
 
 /**
 * Dispatcheur
 */
 define('ROOT', dirname(__FILE__));
-//define('WEBROOT', 'https://'.$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 define('WEBROOT', 'https://'.$_SERVER['HTTP_HOST']. str_replace('/index.php', '', $_SERVER['PHP_SELF']));
 
 // On charge le Singleton
 require ROOT . '/app/App.php';
 require ROOT . '/config/env.php';
+
+// Si dev, alors on affiche les erreurs
+if(ENV === 'dev'){  ini_set('display_errors', '1'); }
 
 // On appel la méthode statique Load()
 App::Load();
