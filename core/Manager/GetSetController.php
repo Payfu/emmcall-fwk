@@ -140,9 +140,9 @@ class GetSetController
   /*
   * Récupération de l\'entité
   */
-  public function getEntity($arrayData, $cond = null, $debug = false){
+  public function getEntity($arrayData){
     $t = $this->'.$this->_nom_table_format.';
-    $f = $t->find($arrayData, $cond, $debug);
+    $f = $t->find($arrayData);
 
     if(!$f){ return false; }
     '.$list.'
