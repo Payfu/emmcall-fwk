@@ -206,6 +206,7 @@ class Table
    * where = array : ["nomChamp"=>"valeur"]
    * ["in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
    * ["not-in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
+   * ["between" => [ "date" => [ "01/01/2019", "02/01/2019" ]]]
    */
   public function all($where = null, $conditions = null){
     $sql_where = $attributes = '';
@@ -220,11 +221,20 @@ class Table
 
       foreach($where as $k => $v){
         // IN : La requête préparée ne semble pas fonctionner
-        if($k == 'in'){
+        if($k == 'in')
+        {
           $attr_part[] = array_keys($where['in'])[0]." IN ( ".$where['in'][ array_keys($where['in'])[0] ]." )";
-        } else if($k == 'not-in'){
-          $attr_part[] = array_keys($where['not-in'])[0]." NOT IN ( ".$where['not-in'][ array_keys($where['not-in'])[0] ]." )";
-        } else {
+        } 
+        else if($k == 'not-in')
+        {
+          $attr_part[] = array_keys($where['not-in'])[0]." NOT IN ( ".$where['not-in'][ array_keys($where['not-in'])[0] ]." )";          
+        } 
+        else if($k == 'between')
+        {           
+           $attr_part[] = array_keys($where['between'])[0]." between ".$where['between'][array_keys($where['between'])[0]][0]. " AND ".$where['between'][array_keys($where['between'])[0]][1];          
+        }
+        else 
+        {
           // Si je trouve une espace dans la clef alors c'est qu'il y a un opérateur ex ["nomClef !=" => "valeur"] 
           $attr_part[] = (strpos($k, ' ')) ? "{$k} ?" : "$k = ?";
           $attributes[] = $v;
