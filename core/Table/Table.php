@@ -206,9 +206,8 @@ class Table
    * where = array : ["nomChamp"=>"valeur"]
    * ["in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
    * ["not-in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
-   * ["between" => [ "date" => [ "01/01/2019", "02/01/2019" ]]]
    */
-  public function all($where = null, $conditions = null){
+  public function all($where = null, $conditions = null, $debug = false){
     $sql_where = $attributes = '';
     $order  = isset($conditions['order'])   ? "ORDER BY {$conditions['order']}" : null;
     $limit  = isset($conditions['limit'])   ? "LIMIT {$conditions['limit']}" : null;
@@ -220,21 +219,12 @@ class Table
       $attributes = [];
 
       foreach($where as $k => $v){
-        // IN : La requête préparée ne semble pas fonctionner
-        if($k == 'in')
-        {
+        // IN : La requête préparée ne semble pas fonctionner alors elle est écrite complètement
+        if($k == 'in'){
           $attr_part[] = array_keys($where['in'])[0]." IN ( ".$where['in'][ array_keys($where['in'])[0] ]." )";
-        } 
-        else if($k == 'not-in')
-        {
-          $attr_part[] = array_keys($where['not-in'])[0]." NOT IN ( ".$where['not-in'][ array_keys($where['not-in'])[0] ]." )";          
-        } 
-        else if($k == 'between')
-        {           
-           $attr_part[] = array_keys($where['between'])[0]." between ".$where['between'][array_keys($where['between'])[0]][0]. " AND ".$where['between'][array_keys($where['between'])[0]][1];          
-        }
-        else 
-        {
+        } else if($k == 'not-in'){
+          $attr_part[] = array_keys($where['not-in'])[0]." NOT IN ( ".$where['not-in'][ array_keys($where['not-in'])[0] ]." )";
+        } else {
           // Si je trouve une espace dans la clef alors c'est qu'il y a un opérateur ex ["nomClef !=" => "valeur"] 
           $attr_part[] = (strpos($k, ' ')) ? "{$k} ?" : "$k = ?";
           $attributes[] = $v;
@@ -247,9 +237,20 @@ class Table
         $sql_where = "WHERE {$attr_part}";    
       }
     }
-    return $this->query("SELECT {$top} {$select} FROM {$this->table} {$sql_where} {$order} {$limit}", $attributes);
-  }
     
+    $sql = "SELECT {$top} {$select} FROM {$this->table} {$sql_where} {$order} {$limit}";
+
+    if($debug){
+      echo "<pre>";
+      print_r($sql);
+      print_r($attributes);
+      echo "</pre>";
+      exit();
+    }
+    
+    return $this->query($sql, $attributes);
+  }
+  
   /**
    * On appel les requêtes dans les classes du dossier Entity (il suffit de changer le nom de la class ex: PostTable -> PostEntity)
    * La requête est préparée quand il y a des attribues
@@ -264,5 +265,12 @@ class Table
       /*return $this->db->query($statement, str_replace('Table', 'Entity', get_class($this)), $one);*/
       return $this->db->query($statement, null, $one);
     }
+  }
+  
+  /*
+   * On récupère le dernier id enregistré
+   */
+  public function lastInsertId(){
+    return $this->db->lastInsertId();
   }
 }
