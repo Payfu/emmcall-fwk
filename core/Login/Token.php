@@ -5,21 +5,22 @@ class Token
 {
  
  /*
-  * genere un Token
+  * Génère un Token, que l'on place également dans une session
   * return string : 5d86062d6447567a6443356c62573168626e566c6243316a595778735a574d755a6e493d8
   */
  public function generateToken() : string {		
   $str = $this->createToken(); 
+  $_SESSION['pg_a'] = $str;
   return $str;
  }
  
  /*
-  * Vérifie si la valeur cachée dans le Token est correcte
+  * Vérifie si la valeur cachée dans le Token est correcte et si ce token est également identique à la session
   * return bool
   */
  public function checkToken($token) : bool
  {
-   if($this->decodeToken($token) === $this->getUri() ){ return true; }
+   if($this->decodeToken($token) === $this->getUri() AND $token == $_SESSION['pg_a'] ){ return true; }
    return false;
  }
  
