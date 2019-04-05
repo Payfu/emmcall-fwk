@@ -51,6 +51,47 @@ class Password
     }
   }
   
+  /*
+   * On crypte la valeur en la glissant entre deux chaînes aléatoires de 5 caractères
+   * On encode en base64 mais on retire le "=" à la fin
+   */
+  public function encodeStr($str){  
+    // On encode la chaine base 64
+    $base64 = base64_encode( $this->generate(5).$str.$this->generate(5) );
+    // On compte le nom de signe '=' à la fin
+    $n = substr_count($base64,"=");
+    // S'il y a au moins un =
+    if($n > 0){
+      $base64 = substr( $base64, 0, '-'.$n);
+    }
+    // On place le nombre de '=' en fin de chaine
+    $str = $base64.$n;
+    
+    return str_replace("/", "-", strrev($str) );
+  }
+  
+  /*
+   * On décode la chaîne pour récupérer la partie qui nous intéresse
+   * On remet le '=' à la fin puis on décode
+   * Enfin on retire les 5 premiers et 5 derniers caractères de la chaine
+   */
+  public function decodeStr($str){
+    $a = str_replace("-", "/", $str);
+    $s = strrev($a);
+    // on récupère le dernier chiffre
+    $n = substr($s, -1);
+    // on récupère la chaine SANS le dernier chiffre
+    $s = substr($s, 0, -1);
+    // On répète le '=' autant de fois que nécessaire
+    $nn = str_repeat("=", $n);
+    // On ajoute les '=', s'ils extiste
+    $str = $s.$nn;
+    // On décode
+    $cDecode = base64_decode($str);
+    // On récupère la chaîne
+    return substr(substr($cDecode, 0, -5), 5) ;
+  }
+  
   private function getAlphaMin(){
     return chr(rand(97,122));
   }
