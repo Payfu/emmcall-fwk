@@ -29,6 +29,11 @@ class Password
         $v = [$this->getAlphaMin(), $this->getAlphaMaj()];
         $str .= $v[rand(0,1)];
       }
+      
+      if($type == 'num'){
+        $v = [$this->getNumeric(), $this->getNumeric()];
+        $str .= $v[rand(0,1)];
+      }
     }
     return str_shuffle($str);
   }
