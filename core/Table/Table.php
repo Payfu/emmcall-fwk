@@ -206,8 +206,9 @@ class Table
    * where = array : ["nomChamp"=>"valeur"]
    * ["in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
    * ["not-in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
+   * ['between'=>['date'=>'2018-01-01', '2019-01-01']]
    */
-  public function all($where = null, $conditions = null, $debug = false){
+  public function all($where = null, $conditions = null, $debug = false){ 
     $sql_where = $attributes = '';
     $order  = isset($conditions['order'])   ? "ORDER BY {$conditions['order']}" : null;
     $limit  = isset($conditions['limit'])   ? "LIMIT {$conditions['limit']}" : null;
@@ -224,12 +225,17 @@ class Table
           $attr_part[] = array_keys($where['in'])[0]." IN ( ".$where['in'][ array_keys($where['in'])[0] ]." )";
         } else if($k == 'not-in'){
           $attr_part[] = array_keys($where['not-in'])[0]." NOT IN ( ".$where['not-in'][ array_keys($where['not-in'])[0] ]." )";
+        } else if($k == 'between'){
+          $attr_part[] = array_keys($where['between'])[0] . " BETWEEN ? AND ?";
+          $attributes[] = $where['between'][ array_keys($where['between'])[0] ];
+          $attributes[] = $where['between'][ array_keys($where['between'])[1] ];
         } else {
           // Si je trouve une espace dans la clef alors c'est qu'il y a un opérateur ex ["nomClef !=" => "valeur"] 
           $attr_part[] = (strpos($k, ' ')) ? "{$k} ?" : "$k = ?";
           $attributes[] = $v;
         }
       }
+      
       $attr_part = implode(' AND ', $attr_part);
 
       if($where)
