@@ -53,7 +53,7 @@ class Router {
     } 
     
     // Impossible de placer ces conditions dans une méthode commune, cela bug.
-    if($this->routes['GET']){
+    if(isset($this->routes['GET']) && $this->routes['GET']){
       foreach ($this->routes['GET'] as $route){
         // Pour chaque route je check si l'url correspond à la route tapée
         if($route->match($this->url)){
@@ -63,15 +63,15 @@ class Router {
       }
     }
 
-    if($this->routes['POST']){
+    if(isset($this->routes['POST']) && $this->routes['POST']){
       foreach ($this->routes['POST'] as $route){
         if($route->match($this->url)){
           return $route->call();
         }
       }
     }
-
-    if($this->routes['DOUBLE']){
+    
+    if(isset($this->routes['DOUBLE']) && $this->routes['DOUBLE']){
       foreach ($this->routes['DOUBLE'] as $route){
         if($route->match($this->url)){
           return $route->call();
