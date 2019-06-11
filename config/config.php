@@ -16,6 +16,10 @@ return array(
   // Copyright
   "copyright"=>"20xx - " . date('Y') . "  © Name",
 
+  // Dimholt
+  "dmlt_key" => "",
+  "dmlt_url" => "",
+
   // BDD
   "db_type" => "mysql",
   "db_user" => "root",
