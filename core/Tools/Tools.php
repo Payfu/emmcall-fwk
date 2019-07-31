@@ -66,6 +66,15 @@ class Tools
     }
 
     /*
+     * Vérifie la validité d'une date : 2020-02-30 = false
+     * Retourne bool
+     */
+    public function validateDate($date, $format = 'Y-m-d H:i:s') : bool{
+      $d = \DateTime::createFromFormat($format, $date);
+      return $d && $d->format($format) == $date;
+    }
+    
+    /*
      * Suppression de TOUS les caractères spéciaux (accent inclus), on ne garde que les alphanum 
      * $replaceBy est ce qui remplacera les caractères speciaux (espace vide par défaut) et on supprime les éventuels doublons (ex: --- => -)
      */
