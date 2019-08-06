@@ -117,6 +117,15 @@ class Tools
       return $text;
     }
 
+    /*
+     * GeoIp
+     * Retourne les informations de location d'une ip
+     * On utilise le web service : https://www.geoplugin.com/webservices/php
+     * Pour réaliser la même chose en local il faut la librairie geoip de php https://www.php.net/manual/fr/book.geoip.php ainsi que les bdd de https://www.maxmind.com/en/home
+     */
+    public function geoId($ip) : array{
+      return unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip={$ip}"));
+    }
 
     /*
      * On ne garde que les mots qui ont au minimum la taille $length (défaut 4)
