@@ -122,6 +122,30 @@ class Tools
      * Retourne les informations de location d'une ip
      * On utilise le web service : https://www.geoplugin.com/webservices/php
      * Pour réaliser la même chose en local il faut la librairie geoip de php https://www.php.net/manual/fr/book.geoip.php ainsi que les bdd de https://www.maxmind.com/en/home
+        [geoplugin_request] => xxx.xxx.xxx.xxx
+        [geoplugin_status] => 200
+        [geoplugin_delay] => 2ms
+        [geoplugin_credit] => Some of the returned data includes GeoLite data created by MaxMind, available from <a href=\'http://www.maxmind.com\'>http://www.maxmind.com</a>.
+        [geoplugin_city] => Achicourt
+        [geoplugin_region] => Hauts-de-France
+        [geoplugin_regionCode] => 62
+        [geoplugin_regionName] => Pas-de-Calais
+        [geoplugin_areaCode] => 
+        [geoplugin_dmaCode] => 
+        [geoplugin_countryCode] => FR
+        [geoplugin_countryName] => France
+        [geoplugin_inEU] => 1
+        [geoplugin_euVATrate] => 20
+        [geoplugin_continentCode] => EU
+        [geoplugin_continentName] => Europe
+        [geoplugin_latitude] => 50.2743
+        [geoplugin_longitude] => 2.7578
+        [geoplugin_locationAccuracyRadius] => 50
+        [geoplugin_timezone] => Europe/Paris
+        [geoplugin_currencyCode] => EUR
+        [geoplugin_currencySymbol] => &#8364;
+        [geoplugin_currencySymbol_UTF8] => €
+        [geoplugin_currencyConverter] => 0.8925
      */
     public function geoId($ip) : array{
       return unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip={$ip}"));
