@@ -47,15 +47,21 @@ class UserAgent
   private function getBrowserVersion($getBrowser) : array{
     // version du navigateur
     $browser = $getBrowser['browser'];
-    $str = explode($browser, $this->_user_agent);
     
-    // S'il y a une espace
-    $isSpace = strstr($str[1], ' ', true); // /75.0.3770.142 Safari/537.36
-    
-    // Si isSpace = true alors il y a une espace dans : "75.0.3770.142 Safari/537.36" sinon les format est plutôt : "68.0"
-    $browserVersion = $isSpace ? substr($isSpace, 1) : substr($str[1], 1);
-    
-    return ['browser_version'=>$browserVersion];
+    // Si le nom du navigateur se trouve bien dans le user agent
+    if(strstr($this->_user_agent, $browser)){
+      $str = explode($browser, $this->_user_agent);
+
+      // S'il y a une espace
+      $isSpace = strstr($str[1], ' ', true); // /75.0.3770.142 Safari/537.36
+
+      // Si isSpace = true alors il y a une espace dans : "75.0.3770.142 Safari/537.36" sinon les format est plutôt : "68.0"
+      $browserVersion = $isSpace ? substr($isSpace, 1) : substr($str[1], 1);
+
+      return ['browser_version'=>$browserVersion];
+    } else {
+      return ['browser_version'=>'unknown'];
+    }
   }
   
 }
