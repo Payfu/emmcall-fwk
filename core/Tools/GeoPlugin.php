@@ -26,7 +26,7 @@ class GeoPlugin
   public function __construct( $ip = false)
   {
     $this->_ip = $ip ?? $_SERVER['REMOTE_ADDR'];
-    $this->_plugin_adresse = "http://www.geoplugin.net/php.gp?ip={$ip}";
+    $this->_plugin_adresse = "http://www.geoplugin.net/php.gp?ip={$this->_ip}";
     $this->connexion();
     $this->setAllData();
   }
@@ -35,7 +35,7 @@ class GeoPlugin
    * On récupère les données à distance
    */
   private function connexion(){
-    $this->_data = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip={$this->_ip}"));
+    $this->_data = unserialize(file_get_contents($this->_plugin_adresse));
   }
   
   // Initialisation des paramètre
@@ -52,7 +52,7 @@ class GeoPlugin
     $this->_geo_longitude     = $this->_data['geoplugin_longitude'];
   }
   
-  // Tous les gets
+  // Tous les getters
   public function getCity()           : string {  return $this->_geo_city ?? "NULL"; }
   public function getRegion()         : string {  return $this->_geo_region ?? "NULL"; }
   public function getRegionCode()     : string {  return $this->_geo_regionCode ?? "NULL"; }
@@ -61,8 +61,8 @@ class GeoPlugin
   public function getCountryName()    : string {  return $this->_geo_countryName ?? "NULL"; }
   public function getContinentCode()  : string {  return $this->_geo_continentCode ?? "NULL"; }
   public function getContinentName()  : string {  return $this->_geo_continentName ?? "NULL"; }
-  public function getLatitude()       : string {  return $this->_geo_latitude ?? "NULL"; }
-  public function getLongitude()      : string {  return $this->_geo_longitude ?? "NULL"; }
+  public function getLatitude()       : string {  return $this->_geo_latitude ?? "37.243056"; } // Area 51
+  public function getLongitude()      : string {  return $this->_geo_longitude ?? "-115.813056"; } // Area 51
   
   /*
    * Permet de récumérer l'ensebme des données sous la forme d'un tableau
