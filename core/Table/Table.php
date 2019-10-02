@@ -185,7 +185,7 @@ class Table
   *
   public function insertMultiple()
   {
-      /*
+      
       $datafields = array('fielda', 'fieldb', ... );
       $data[] = array('fielda' => 'value', 'fieldb' => 'value' ....);
       $data[] = array('fielda' => 'value', 'fieldb' => 'value' ....);
@@ -208,7 +208,12 @@ class Table
    * ["in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
    * ["not-in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
    * ['between'=>['date'=>'2018-01-01', '2019-01-01']]
+   * 
+   * condition = array : ["order" => "nomChamp DESC"]
+   * ['limit'=>100] 
+   * ['top'=>100] 
    * ['cache'=>60] 
+   * ['select'=>"colonne1, colonne2"] 
    */
   public function all($where = null, $conditions = null, $debug = false){ 
     $sql_where = $attributes = '';
