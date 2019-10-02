@@ -192,6 +192,9 @@ class Table
       
   }*/
     
+  /*
+   * Extract
+   */
   public function extract($key, $value)
   {
       $records = $this->all();
@@ -203,6 +206,7 @@ class Table
   }
     
   /*
+   * ALL() 
    * Retourne tous les enregistrements
    * where = array : ["nomChamp"=>"valeur"]
    * ["in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
