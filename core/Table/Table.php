@@ -213,7 +213,7 @@ class Table
    * ["not-in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
    * ['between'=>['date'=>'2018-01-01', '2019-01-01']]
    * 
-   * condition = array : ["order" => "nomChamp DESC"]
+   * conditions = array : ["order" => "nomChamp DESC"]
    * ['limit'=>100] 
    * ['top'=>100] 
    * ['cache'=>60] 
