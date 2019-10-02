@@ -47,6 +47,7 @@ class Table
     if(count($where) == 0){ die("<strong>La méthode find() ne peut être vide !</strong>");}
     $attr_part = $attributes = [];
 
+    $cache  = isset($conditions['cache'])   ? $conditions['cache']  : null;
     $select = isset($conditions['select'])  ? $conditions['select'] : "*";
 
     foreach($where as $k => $v){
@@ -69,7 +70,7 @@ class Table
       exit();
     }
 
-    return $this->query($sql, $attributes, true );
+    return $this->query($sql, $attributes, true, $cache );
   }
     
   /**
@@ -181,15 +182,15 @@ class Table
     
   /**
   * Insert multiple
-  */
+  *
   public function insertMultiple()
   {
       /*
       $datafields = array('fielda', 'fieldb', ... );
       $data[] = array('fielda' => 'value', 'fieldb' => 'value' ....);
       $data[] = array('fielda' => 'value', 'fieldb' => 'value' ....);
-      */
-  }
+      
+  }*/
     
   public function extract($key, $value)
   {
@@ -207,12 +208,14 @@ class Table
    * ["in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
    * ["not-in"=> ["date" => "2018-05-28, 2018-05-27, 2018-06-01"]] 
    * ['between'=>['date'=>'2018-01-01', '2019-01-01']]
+   * ['cache'=>60] 
    */
   public function all($where = null, $conditions = null, $debug = false){ 
     $sql_where = $attributes = '';
     $order  = isset($conditions['order'])   ? "ORDER BY {$conditions['order']}" : null;
     $limit  = isset($conditions['limit'])   ? "LIMIT {$conditions['limit']}" : null;
     $top    = isset($conditions['top'])     ? "TOP ({$conditions['top']}) " : null;
+    $cache  = isset($conditions['cache'])   ? $conditions['cache']  : null;
     $select = isset($conditions['select'])  ? $conditions['select'] : "*";
 
     if ($where) {
@@ -254,21 +257,69 @@ class Table
       exit();
     }
     
-    return $this->query($sql, $attributes);
+    return $this->query($sql, $attributes, null, $cache);
   }
   
   /**
    * On appel les requêtes dans les classes du dossier Entity (il suffit de changer le nom de la class ex: PostTable -> PostEntity)
    * La requête est préparée quand il y a des attribues
+   * @cache = (temps de la mise en cache en seconde)
    */
-  public function query($statement, $attributes = null, $one = false)
+  public function query(string $statement, $attributes = null, $one = false, string $cache = null)
   {
+    // On transforme le tableau $attributes en string
+    if($attributes){ $attr = implode(',',$attributes);}
+    $filename = "core/Table/tmp/".base64_encode($statement.",".$attr.",".$one). ".dat";
+    
+    // Si on demande de mettre en cache
+    if($cache){
+      
+      // Si la date est dépassée ou qu'elle n'existe pas alors on enregistre le resultat dans un fichier temporaire
+      // mais on retourne aussi les données
+      if (filemtime($filename)<time()-($cache)) {
+        
+        // Si le dossier tmp n'existe pas on le crée
+        $dirname = dirname($filename);
+        if (!is_dir($dirname)){ mkdir($dirname, 0755, true); }
+        
+        // On ouvre le fichier
+        $fd = fopen($filename, "w"); // on ouvre le fichier cache
+        if ($fd) {
+          $contenuCache = serialize( $this->finalQuery($statement, $attributes, $one) );
+          
+          fwrite($fd,$contenuCache); // on écrit le contenu du buffer dans le fichier cache
+          fclose($fd);
+          // On retourne les data
+          return unserialize($contenuCache);
+        }
+      }
+      // Les données existe dans le cache on les retourne
+      else {
+        
+        //$f = readfile($filename);
+        $f = fopen($filename, "rb");
+        $v = fread($f, filesize($filename));
+        //var_dump(unserialize($v));
+        //exit("ici");
+        
+        return unserialize($v); // affichage du contenu du fichier
+      }
+      
+    } else {
+      // Pas de mise en cache on retourne les données
+      return $this->finalQuery($statement, $attributes, $one);
+    }
+  }
+  
+  /*
+   * Requête finale
+   * C'est elle qui retourne les données
+   */
+  private function finalQuery(string $statement, $attributes = null, $one = false){
     // J'ai modifié les requêtes pour retirer l'appel au dossier entity qui deviendra obsolète
     if($attributes){
-      /*return $this->db->prepare($statement, $attributes, str_replace('Table', 'Entity', get_class($this)), $one);*/
       return $this->db->prepare($statement, $attributes, null, $one);
     } else {
-      /*return $this->db->query($statement, str_replace('Table', 'Entity', get_class($this)), $one);*/
       return $this->db->query($statement, null, $one);
     }
   }
