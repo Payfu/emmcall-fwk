@@ -277,6 +277,7 @@ class Table
   public function query(string $statement, $attributes = null, $one = false, string $cache = null)
   {
     // On transforme le tableau $attributes en string
+    $attr = '';
     if($attributes){ $attr = implode(',',$attributes);}
     $filename = "core/Table/tmp/".base64_encode($statement.",".$attr.",".$one). ".dat";
     
