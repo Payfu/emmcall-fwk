@@ -279,44 +279,66 @@ class Table
     // On transforme le tableau $attributes en string
     $attr = '';
     if($attributes){ $attr = implode(',',$attributes);}
-    $filename = "core/Table/tmp/".base64_encode($statement.",".$attr.",".$one). ".dat";
+    $fn = substr(base64_encode($statement.",".$attr.",".$one), -200);
+    
+    $filename = ROOT."/core/Table/tmp/".$fn. ".dat";
+    
+    //var_dump(ROOT);
+    /*var_dump(filemtime(ROOT.'/'.$filename));
+    exit;*/
     
     // Si on demande de mettre en cache
     if($cache){
       
-      // Si la date est dépassée ou qu'elle n'existe pas alors on enregistre le resultat dans un fichier temporaire
-      // mais on retourne aussi les données
-      if (filemtime($filename)<time()-($cache)) {
-        
+      // Si le fichier existe
+      if(file_exists($filename)){
+        // Si la date est dépassée alors on enregistre le resultat dans un fichier temporaire
+        // on retourne aussi les données
+        if (filemtime($filename)<time()-($cache)){
+          // Si le dossier tmp n'existe pas on le crée
+          $this->createDir($filename);
+          
+          // On ouvre le fichier
+          $fd = fopen($filename, "w"); // on ouvre le fichier cache
+          if ($fd) {
+            $contenuCache = serialize( $this->finalQuery($statement, $attributes, $one) );
+            fwrite($fd,$contenuCache); // on écrit le contenu du buffer dans le fichier cache
+            fclose($fd);
+            // On retourne les data
+            return unserialize($contenuCache);
+          }
+        }
+        // La date n'est pas dépassée
+        else {
+          // Les données existe dans le cache on les retourne
+          $f = fopen($filename, "rb");
+          $v = fread($f, filesize($filename));
+          return unserialize($v); // affichage du contenu du fichier
+        }
+      }
+      
+      /*
+          *  le fichier n'existe pas on le crée
+          */
+      else {
         // Si le dossier tmp n'existe pas on le crée
-        $dirname = dirname($filename);
-        if (!is_dir($dirname)){ mkdir($dirname, 0755, true); }
-        
+        $this->createDir($filename);
+
         // On ouvre le fichier
         $fd = fopen($filename, "w"); // on ouvre le fichier cache
         if ($fd) {
           $contenuCache = serialize( $this->finalQuery($statement, $attributes, $one) );
-          
           fwrite($fd,$contenuCache); // on écrit le contenu du buffer dans le fichier cache
           fclose($fd);
           // On retourne les data
           return unserialize($contenuCache);
         }
       }
-      // Les données existe dans le cache on les retourne
-      else {
-        
-        //$f = readfile($filename);
-        $f = fopen($filename, "rb");
-        $v = fread($f, filesize($filename));
-        //var_dump(unserialize($v));
-        //exit("ici");
-        
-        return unserialize($v); // affichage du contenu du fichier
-      }
-      
-    } else {
-      // Pas de mise en cache on retourne les données
+    } 
+    /*
+       * Pas de mise en cache on retourne les données
+       */
+    else {
       return $this->finalQuery($statement, $attributes, $one);
     }
   }
@@ -332,6 +354,14 @@ class Table
     } else {
       return $this->db->query($statement, null, $one);
     }
+  }
+  
+  /*
+   * Création du dossier
+   */
+  private function createDir($filename){
+    $dirname = dirname($filename);
+    if (!is_dir($dirname)){ mkdir($dirname, 0755, true); }
   }
   
   /*
