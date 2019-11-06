@@ -92,7 +92,7 @@ class Table
    * $where ex : ['id' => 'value']
    * $fields (les champs à modifier) ex : ['name_field1' => 'value', 'name_field2' => 'value']
    */
-  public function update($where, $fields)
+  public function update($where, $fields, $debug = false)
   {
     $sql_parts = [];
     $attributes = [];
@@ -110,8 +110,18 @@ class Table
     // implode = 'titre = ?, contenu = ?'
     $sql_part = implode(', ', $sql_parts);
     $attr_part = implode(' AND ', $attr_part);
+    
+    $sql = "UPDATE {$this->table} SET {$sql_part} WHERE {$attr_part} ";
 
-    return $this->query("UPDATE {$this->table} SET {$sql_part} WHERE {$attr_part} ", $attributes, true );
+    if($debug){
+      echo "<pre>";
+      print_r($sql);
+      print_r($attributes);
+      echo "</pre>";
+      exit();
+    }
+    
+    return $this->query($sql, $attributes, true );
   }
     
   /*
