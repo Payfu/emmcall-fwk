@@ -1,0 +1,4 @@
+error_404:
+    path: /error404
+    defaults: 
+        _controller: Error:error404
