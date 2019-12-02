@@ -79,8 +79,15 @@ class Router {
       }
     }
     
-    // Je ne trouve aucune correspondance, je retourne une exception
-    throw new RouterException("<p><strong>Aucune route trouvée</strong></p>");
+    // On récupère l'URL complète à afficher dans le message d'erreur.    
+    $url = WEBROOT.'/'.FULL_URI;
+    // Je ne trouve aucune correspondance, je retourne une exception 404
+    if (class_exists("\Core\Controller\Controller")) {
+      \Core\Controller\Controller::notFound($url);
+    }
+    else {
+      throw new RouterException("<p><strong>Aucune route trouvée => <span style='color:#FF0000';>{$url}</span></strong></p>");
+    }
   }
   
   public function url(string $name, array $params = []){
