@@ -85,9 +85,18 @@ class Controller
         die('Acces refusé');
     }
     
-    protected function notFound()
+    /*
+     * Gestion de l'erreur 404
+     */
+    protected function notFound(string $value=null)
     {
-        header('HTTP/1.0 404 Not Found');
-        die('Page Introuvable');
+      // On enregistre $value en session
+      if($value <> null){
+        $_SESSION['SESS_ERROR_404'] = $value;
+      }
+      $url = WEBROOT.'/error404';
+      // On redirige vers la route par defaut du controller app/controller/ErrorController.php
+      header('Location:'.$url);
+      exit;
     }
 }
