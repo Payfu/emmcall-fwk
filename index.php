@@ -22,6 +22,9 @@ App::Load();
 // On récupère l'url
 $page = $_GET['url'] ?? '';
 
+// Constante : contient la valeur passer en GET
+define('FULL_URI', $page);
+
 // On indique le chemin du fichier où les routes sont répertoriées
 $ymlFile = ROOT."/app/Routes/routes.yml";
 $routing = new Routing($ymlFile, $page);
