@@ -17,11 +17,10 @@ class Routing extends YamlParser
   public function __construct(string $fileName, $url = null)
   {
     parent::__construct($fileName);
-    // On récupère le tableau formé à partir de YML
+    // On récupère le tableau formé à partir de YAML
     $this->_array = $this->getArray();
     // On récupère l'url
     $this->_url = $url;    
-    
   }
   
   public function routeManager(){
@@ -59,13 +58,12 @@ class Routing extends YamlParser
     } else {
       return $chemin;
     }
-    
   }
   
   /*
    * Contrôle tous les paramètres de toutes les routes
-	 * Puis on lance le router
-	 * Enfin on lance la route
+   * Puis on lance le router
+   * Enfin on lance la route
    */
   private function checkParams() {
     $arrayRoutes = $this->_array;
@@ -99,10 +97,10 @@ class Routing extends YamlParser
     }
     
     /**
-     * Etape 2
-     * Gestion du PATH
-     * On check l'ensemble des routes et des infos indiqués
-     */	
+      * Etape 2
+      * Gestion du PATH
+      * On check l'ensemble des routes et des infos indiqués
+      */	
     // On instancie le router
     $router = new Router($this->_url);
     
