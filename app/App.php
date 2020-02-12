@@ -1,10 +1,6 @@
 <?php
-/**
- * Pour la méthode getDb();
- */
 use Core\Config;
 use Core\DataBase\MysqlDataBase;
-
 
 /*
  * Ici se trouvent des variables static dont une permettant de sauvegarder la connexion à la base de donnée
@@ -20,17 +16,16 @@ use Core\DataBase\MysqlDataBase;
 
 class App
 {
-  public $site_name;
   public $title;
   public $description;
   public $keywords;
   public $author;
   public $lang;
   public $copyright;
-
-  public $contact_destinataire;
-  public $contact_objet;
+  public $contact_from;
+  
   private $db_instance;
+  public static $_databases;
   private static $_instance;
 
   /*
@@ -38,9 +33,13 @@ class App
    */
   public function __construct()
   {
-    $config = Config::getInstance(ROOT . '/config/config.php');
+    //$config = Config::getInstance(ROOT . '/config/config.php');
+    // On converti le fichier yaml en array et on le transmet
+    $config = Config::getInstance(yaml_parse_file(ROOT . '/config/config.yml'));
 
-    $this->site_name    = $config->get('site_name');
+    // la clef database nécessite l'appel de la méthode getDatabase
+    self::$_databases   = $config->get('database');    
+        
     $this->title        = $config->get('title');
     $this->description  = $config->get('description');
     $this->keywords     = $config->get('keywords');
@@ -49,8 +48,9 @@ class App
     $this->copyright    = $config->get('copyright');
 
     // Les email
-    $this->contact_destinataire     = $config->get('contact_destinataire');
-    $this->contact_objet            = $config->get('contact_objet');    
+    $this->contact_from     = $config->get('contact_from');
+    $this->contact_objet    = $config->get('contact_objet');    
+    
   }
 
   /**
@@ -64,6 +64,13 @@ class App
     }
     return self::$_instance;
   }
+  
+  /*
+   * On récupère l'ensemble des bdd
+   */
+  public static function getDatabases():array{
+    return self::$_databases;
+  }
 
   /**
    * Cette méthode va charger 3 autoloader + un session_start
@@ -71,13 +78,9 @@ class App
    */
   public static function Load()
   {
-    session_start();
-
-    //require ROOT . '/app/Autoloader.php';
     require_once  ROOT . '/app/Autoloader.php';
     App\Autoloader::register();
 
-    //require ROOT . '/core/Autoloader.php';
     require_once ROOT . '/core/Autoloader.php';
     Core\Autoloader::register();
 
@@ -88,32 +91,31 @@ class App
   /**
   * Cette méthode utlise une Factory permettant d'appeler une succession de tables sans difficulté
   */
-  public function getTable($nameTable, $fromBundle = null)
+  public function getTable($nameTable, $nomBase, $fromBundle = null)
   {
     if($fromBundle){
       $className = "\\App\\src\\{$fromBundle}\\Table\\" . ucfirst($nameTable) . "Table"; // ex : App\src\NomBundle\Table\CategoriesTable
     } else {
       $className = "\\App\\Table\\" . ucfirst($nameTable) . "Table"; // ex : App\Table\CategoriesTable
     }
-
     // Instanciation de la classe
-    return new $className($this->getDb());
+    // getDb() doit recevoir le paramètre qui identifie la bonne bdd !
+    return new $className($this->getDb($nomBase));
   }
+
 
   /**
   * Second Factory pour la base de données
   */
-  public function getDb()
+  public function getDb($nomBase)
   {
-    // On récupère la config
-    $config = Config::getInstance(ROOT . '/config/config.php');
-
-    // Si la base n'est pas instanciée
-    if(is_null($this->db_instance))
-    {
-      $this->db_instance = new MysqlDataBase($config->get('db_name'), $config->get('db_user'), $config->get('db_pass'), $config->get('db_host'), $config->get('db_type'));
+    foreach(self::$_databases as $k=>$v){
+      if($k === $nomBase){
+        $this->db_instance = new MysqlDataBase($v['db_name'],$v['db_user'],$v['db_pass'],$v['db_host'],$v['db_type']);
+        // c'est la bonne base con casse la boucle
+        break;
+      }
     }
-
     return $this->db_instance;
-  }
+  }    
 }
