@@ -4,8 +4,6 @@ declare(strict_types=1); // Déclanche une erreur en cas de scalaire incorrect
 namespace App\src;
 
 use Core\Controller\Controller;
-use Core\Auth\DBAuth;
-use App\Controller\UserController;
 use App;
 
 
@@ -38,15 +36,20 @@ class AppController extends Controller
     $this->cssPath      = WEBROOT . '/scripts/'.$this->getBundleName($classChild, true).'/css/';
   }
 
-  /**
-   * Appel à la BDD
-   * @param string $model_name
-   */
-  public function loadModel(string $model_name)
-  {
-    $this->$model_name = App::getInstance()->getTable($model_name, $this->currentClass);
-  }
+  /*
+    * Cette methode magique me permet de récupérer le nom de la clef de la base et de la table souhaité dans les contrôleurs
+    */
+  public function __call(string $nomBase, array $nomTable){
+    $nomBase = strtolower(explode("load", $nomBase)[1]);
+    $nomTable = $nomTable[0];
 
+    if(in_array($nomBase, array_keys(App::getInstance()->getDatabases()))){
+      $this->$nomTable = App::getInstance()->getTable($nomTable, $nomBase, $this->currentClass);
+    } else {
+      die("Clef BDD ({$nomBase}) incorrecte !");
+    } 
+  }
+  
   /**
    * Récupère le nom de la classe sans le chemin, ex : App\src\TestBundle\Controller\IndexController => TestBundle;
    * @withoutName = bool, si true alors TestBundle = Test
@@ -59,7 +62,4 @@ class AppController extends Controller
       return preg_replace("/Bundle/", "", explode('\\', $classChild)[2]);
     }
   }
-    
-    
-    
 }
