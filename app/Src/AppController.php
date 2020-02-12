@@ -9,12 +9,13 @@ use App;
 
 /**
  * Description of AppController pour les Bundles
- * Cette page est importante car elle détermine l'url de views et le nom de la page du template POUR LES BUNDLES
+ * Cette page est importante car elle détermine l'url de views et le nom de la page du template
  * Ces variables son appelées dans Core\Controller\Controller
  * @author EmmCall
  */
 class AppController extends Controller
 {
+  
   /**
    * Initialisation des variables
    * Toutes ces variable sont lu dans core/controller/controller.php
@@ -23,6 +24,7 @@ class AppController extends Controller
    */
   private $currentClass;
   protected $template = 'default';
+  
   
   public function __construct($classChild, $newTemplate = null)
   {
@@ -34,14 +36,36 @@ class AppController extends Controller
     $this->cssPath      = WEBROOT . '/scripts/'.$this->getBundleName($classChild, true).'/css/';
   }
 
+  /*
+    * Cette methode magique me permet de récupérer le nom de la clef de la base et de la table souhaité dans les contrôleurs
+    */
+  public function __call(string $nomBase, array $nomTable){
+  
+  
+    $nomBase = strtolower(explode("load", $nomBase)[1]);
+    $nomTable = $nomTable[0];
+
+    if(in_array($nomBase, array_keys(App::getInstance()->getDatabases()))){
+      $this->$nomTable = App::getInstance()->getTable($nomTable, $nomBase, $this->currentClass);
+    } else {
+      die("Clef BDD ({$nomBase}) incorrecte !");
+    } 
+  }
+  
+  
   /**
    * Appel à la BDD
    * @param string $model_name
-   */
+   *
   public function loadModel(string $model_name)
   {
     $this->$model_name = App::getInstance()->getTable($model_name, $this->currentClass);
   }
+  
+  public function loadModel2(string $model_name)
+  {
+    $this->$model_name = App::getInstance2()->getTable2($model_name, $this->currentClass);
+  }*/
 
   /**
    * Récupère le nom de la classe sans le chemin, ex : App\src\TestBundle\Controller\IndexController => TestBundle;
