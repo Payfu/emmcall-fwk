@@ -19,18 +19,36 @@ class AppRootController extends Controller
 
     public function __construct()
     {
-        $this->viewPath     = ROOT . '/app/Views/';
-        $this->templatePath = ROOT . '/app/Views/';
-        $this->jsPath   = WEBROOT . '/scripts/js/';
-        $this->cssPath  = WEBROOT . '/scripts/css/';
+      $this->viewPath     = ROOT . '/app/Views/';
+      $this->templatePath = ROOT . '/app/Views/';
+      $this->jsPath   = WEBROOT . '/scripts/js/';
+      $this->cssPath  = WEBROOT . '/scripts/css/';
     }
     
-    /**
-     * Appel à la BDD
-     * @param string $model_name
+    /*
+     * Cette methode magique me permet de récupérer le nom de la clef de la base et de la table souhaité dans les contrôleurs
      */
-    public function loadModel(string $model_name)
-    {
-        $this->$model_name = App::getInstance()->getTable($model_name);
+    public function __call(string $nomBase, array $nomTable){
+      $nomBase = strtolower(explode("load", $nomBase)[1]);
+      $nomTable = $nomTable[0];
+      
+      if(in_array($nomBase, array_keys(App::getInstance()->getDatabases()))){
+        $this->$nomTable = App::getInstance()->getTable($nomTable, $nomBase);
+      } else {
+        die("Clef BDD ({$nomBase}) incorrecte !");
+      } 
     }
+    
+    /*
+     * 
+     *
+    public function loadModel(string $nomBase, string $nomTable){
+  
+      if(in_array($nomBase, array_keys(App::getInstance()->getDatabases()))){
+        $this->$nomTable = App::getInstance()->getTable($nomTable, $nomBase);
+      } else {
+        die("Clef BDD ({$nomBase}) incorrecte !");
+      }
+    }*/
+    
 }
