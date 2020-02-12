@@ -37,18 +37,5 @@ class AppRootController extends Controller
       } else {
         die("Clef BDD ({$nomBase}) incorrecte !");
       } 
-    }
-    
-    /*
-     * 
-     *
-    public function loadModel(string $nomBase, string $nomTable){
-  
-      if(in_array($nomBase, array_keys(App::getInstance()->getDatabases()))){
-        $this->$nomTable = App::getInstance()->getTable($nomTable, $nomBase);
-      } else {
-        die("Clef BDD ({$nomBase}) incorrecte !");
-      }
-    }*/
-    
+    }    
 }
