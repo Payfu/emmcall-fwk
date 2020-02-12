@@ -2,19 +2,19 @@
 # Pour ajouter une nouvelle clef et sa valeur il faut la déclarer dans app\App.php
 meta:
     title:
-        Analytique
+        Titre
     description:
-        Portail unique d'exploitation
+        Description du site
     author: 
         Emmanuel CALLEC
     lang:
         fr
     copyright:
-        ©API-RESTAURATION
+        ©xxxx
         
 dimholt:
     dmlt_key:
-        6872a097cedbc05d6ccadfd0618
+        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     dmlt_url:
         https://dimholt.api-restauration.com/get
         
@@ -26,39 +26,38 @@ contact:
 
 database:
     # Indiquer les clefs en minuscule
-    # Attention : changer la clef d'une application en prod fera tout planté
-    dsp:
+    # nom de la clef en minuscule et sans espace
+    db1:
         db_type:
-            sqlsrv
+            sqlsrv/mysql
         db_user:
             NULL
         db_pass:
             NULL
         db_name:
-            DSP
+            NULL
         db_host:
-            CLU-SQL\APISQL2014
+            NULL
     
-    extconso:
+    db2:
         db_type:
-            sqlsrv
+            sqlsrv/mysql
         db_user:
             NULL
         db_pass:
             NULL
         db_name:
-            ExtranetConsommateur
+            NULL
         db_host:
-            CLU-SQL\APISQL2014
-  
-    apimenu:
+            NULL
+    db3:
         db_type:
-            sqlsrv
+            sqlsrv/mysql
         db_user:
             NULL
         db_pass:
             NULL
         db_name:
-            APIMENUS
+            NULL
         db_host:
-            SRV-161
+            NULL
