@@ -16,7 +16,7 @@ class HomeController extends AppRootController
     public function __construct()
     {
         parent::__construct();
-        //$this->loadModel('Nom_table');
+        //$this->loadClefbdd('Nom_table');
     }
 
 
