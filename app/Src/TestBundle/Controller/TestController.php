@@ -21,7 +21,8 @@ class TestController extends AppController
      * @param2 = string "nomDuNouveauTemplate" (optionnel) 
      */
     parent::__construct(static::class, null);
-    //$this->loadModel('NomTable');
+    // Pas utile si les entités sont créés via le manager.
+    //$this->loadClefbdd('NomTable');
   }
 
   /**
@@ -46,8 +47,15 @@ class TestController extends AppController
 
     // Connexion à la table
     //$tNomTable = $this->NomTable;
-    //$list = $tNomTable->all(["date"=>date("1979-05-04")]);
-    //var_dump($list);
+    // Création d'une requête via une instance
+    //$result = $tNomTable->query("select *  form nom_table");
+    
+    // Dans le cas d'entités créées avec le manager
+    // $table = new NomTableObj();
+    // $listPlat = $table->getEntities(["id_categorie"=>5], ["select"=>"nom_plat, id_plat, id_categorie", "cache"=>60]);
+    //var_dump($result);
+    
+    
 
     $data = array_merge($scripts, compact( 'metaTitle', 'metaDescription', 'token'));
 
