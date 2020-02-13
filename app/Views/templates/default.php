@@ -27,7 +27,6 @@
     <?php if(isset($scripts_css)){ echo $scripts_css; } ?>
     
   </head>
-  
   <body>
  
     <!-- Nav Bar -->
@@ -35,11 +34,11 @@
     <!-- container -->
     <div class="container">
         <?= $content; ?>
-	    <i class="fab fa-500px"></i>	    
+      
       <!-- Footer -->
       <div class="row">
         <footer class="section-footer col-12 text-center">
-          <strong><?= App::getInstance()->copyright; ?></strong>
+          <strong><?= date("Y")?> <?= App::getInstance()->copyright; ?></strong>
         </footer>
       </div>
       
@@ -66,4 +65,3 @@
     
   </body>
 </html>
-
