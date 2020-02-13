@@ -23,7 +23,7 @@ class HomeController extends AppRootController
     /**
      * La methode render envoie la partie HTML, 
      * cette methode se trouve dans le controller situé dans le core
-     * $this->Post et $this->category sont initialisé dans le constructeur avec $this->loadModel
+     * $this->Post et $this->category sont initialisé dans le constructeur avec $this->loadClefbdd
      */
     public function index($arg = null)
     { 
