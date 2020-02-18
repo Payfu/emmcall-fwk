@@ -24,23 +24,19 @@ class Config
    */
   public function __construct(array $file)
   {
-      //$this->settings =  require($file);
-      $this->settings = $file;
+    $this->settings = $file;
   }
-
 
   /**
    * Cette methode permet de n'appeler qu'une seule fois l'instance
    */
   public static function getInstance($file)
   {
-      //self::$_instance = new Config($file);
-      if(is_null(self::$_instance))
-      {
-          self::$_instance = new Config($file);
-      }
-
-      return self::$_instance;
+    if(is_null(self::$_instance))
+    {
+      self::$_instance = new Config($file);
+    }
+    return self::$_instance;
   }
 
   /*
