@@ -2,8 +2,6 @@
 
 require_once './../../config/env.php';
 
-
-
 if(ENV === 'dev'){
   
   // creation d'un bundle
