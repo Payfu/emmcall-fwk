@@ -99,4 +99,68 @@ class Controller
       header('Location:'.$url);
       exit;
     }
+    
+  /*
+   * Cette méthode est appelée depuis un nomTableObj.
+   * On récupère la liste des champs pour le select d'une entité
+   * paramètre à false si on veut un tableau
+   * IMPORTANT l'objet doit d'abors passer par get_object_vars( ) avant d'être transmis !
+  */
+  protected function getFields($entity, $isString = false){
+    
+    $arrayProprietes = array_keys($entity);
+    
+    $arr=[];
+    foreach ($arrayProprietes as $k) {
+      if(substr($k, 0, 2) == '__'){
+        // La clef du tableau est le nom du champ (et de la propriété) et la valeur est la propriété
+        $arr[] = substr($k, 2);
+      }
+    }
+    // Si isTring = true => array, sinon => string
+    return $isString ? $arr : implode(',',$arr);
+  }
+  
+  /*
+   * Cette méthode est appelée depuis un nomTableObj.
+   * En fonction de si c'est un getEntity, createEntity, ou updateEntity on construit pas de la même façons
+   */
+  protected function constructEntity($entity, $action, $fields=false){
+    
+    $arrCreateEntity = $arrUpdateEntity=[];
+    
+    foreach($fields as $k => $v){
+      $prop = "__".$k;
+      
+      // GetEntity
+      if($action === 'getEntity'){
+        $entity->$prop = $fields->$k;
+      }
+      
+      // createEntity
+      if($action === 'createEntity'){
+        $prop2 = "__".$v;
+                
+        // On ne met pas l'id car c'est un auto-incrément
+        if($v <> 'id' ){
+          $arrCreateEntity[$v] = $entity->$prop2;
+        }
+      }
+      // updateEntity
+      // On récupère les données qui ont été modifié par setNomChamp() dans l'entité
+      if($action === 'updateEntity'){
+        $arrUpdateEntity[$k] = $entity->$prop;
+      }
+    }
+    
+    if($action === 'getEntity'){
+      return $entity;
+    }
+    if($action === 'createEntity'){
+      return $arrCreateEntity;
+    }
+    if($action === 'updateEntity'){
+      return $arrUpdateEntity;
+    }
+  }
 }
