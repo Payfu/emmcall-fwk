@@ -8,18 +8,18 @@ $(document).ready(function(e) {
    
    // Gestion des bundles
    $('form[id=bundleForm]').submit(function(event){
-        event.preventDefault();
-        
-        var bundleName = $( "#bundleName" ).val();
-        
-        if(bundleName !== ''){
-            var url = 'bundle';
-            var data = {bundleName: bundleName, action: 'create'};
-            getAjax(url, data);
-            
-            // vide le input
-            $( "#bundleName" ).val('');
-        }
+      event.preventDefault();
+
+      var bundleName = $( "#bundleName" ).val();
+
+      if(bundleName !== ''){
+        var url = 'bundle';
+        var data = {bundleName: bundleName, action: 'create'};
+        getAjax(url, data);
+
+        // vide le input
+        $( "#bundleName" ).val('');
+      }
     });
     
     // Gestion des entités
@@ -28,11 +28,12 @@ $(document).ready(function(e) {
         
         var entityName = $( "#entityName" ).val();
         var listBundle = $( "#listBundle" ).val();
+        var bddName = $( "#listBdd" ).val();
         
-        if(entityName !== '' && listBundle !== null){
+        if(entityName !== '' && listBundle !== null && bddName !== null ){
             
             var url = 'entity';
-            var data = {entityName: entityName, listBundle:listBundle, action: 'create'};
+            var data = {entityName: entityName, listBundle:listBundle, bddName:bddName, action: 'create'};
             
             getAjax(url, data);
             
@@ -47,36 +48,37 @@ $(document).ready(function(e) {
     
     function getAjax (url, data){
         
-        $.ajax({
-            type: 'POST',
-            url: './core/Manager/' + url + '.php', 
-            data: data,
-            dataType: "json",
-            cache: false,             
+      $.ajax({
+        type: 'POST',
+        url: './core/Manager/' + url + '.php', 
+        data: data,
+        dataType: "json",
+        cache: false,             
 
-            success: function(data)  
-            {
-                if(data.type === 'ok'){
-                    $('#msg-ok').html(data.msg);
-                    $('#alert-ok').slideDown().delay(7000).slideUp();
-                    
-                    // Récupération de la liste des bundles pour le champ select
-                    getBundleList();
-                }
-                
-                if(data.type === 'ko'){
-                    $('#msg-ko').html(data.msg);
-                    $('#alert-ko').slideDown().delay(7000).slideUp();
-                }
-                
-                if(data.type === 'listBundle'){
-                    $('#listBundle').html(data.list);
-                }
-            },
-            error: function () {
-                console.log("ERREUR : permission refusée");
-            }
-        });
+        success: function(data)  
+        {
+          if(data.type === 'ok'){
+              $('#msg-ok').html(data.msg);
+              $('#alert-ok').slideDown().delay(7000).slideUp();
+
+              // Récupération de la liste des bundles pour le champ select
+              getBundleList();
+          }
+
+          if(data.type === 'ko'){
+              $('#msg-ko').html(data.msg);
+              $('#alert-ko').slideDown().delay(7000).slideUp();
+          }
+
+          if(data.type === 'listBundle'){
+              $('#listBundle').html(data.list);
+              $('#listBdd').html(data.bddKeys);
+          }
+        },
+        error: function () {
+            console.log("ERREUR : permission refusée");
+        }
+      });
     };
     
     // On récupère la liste des bundles
@@ -84,7 +86,5 @@ $(document).ready(function(e) {
         var url = 'getOptions';
         var data = {val: ''};
         getAjax(url, data);
-    }
-    
+    } 
 });
- 
