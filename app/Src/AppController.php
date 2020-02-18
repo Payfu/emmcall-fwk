@@ -6,7 +6,6 @@ namespace App\src;
 use Core\Controller\Controller;
 use App;
 
-
 /**
  * Description of AppController pour les Bundles
  * Cette page est importante car elle détermine l'url de views et le nom de la page du template
@@ -40,8 +39,6 @@ class AppController extends Controller
     * Cette methode magique me permet de récupérer le nom de la clef de la base et de la table souhaité dans les contrôleurs
     */
   public function __call(string $nomBase, array $nomTable){
-  
-  
     $nomBase = strtolower(explode("load", $nomBase)[1]);
     $nomTable = $nomTable[0];
 
@@ -52,21 +49,6 @@ class AppController extends Controller
     } 
   }
   
-  
-  /**
-   * Appel à la BDD
-   * @param string $model_name
-   *
-  public function loadModel(string $model_name)
-  {
-    $this->$model_name = App::getInstance()->getTable($model_name, $this->currentClass);
-  }
-  
-  public function loadModel2(string $model_name)
-  {
-    $this->$model_name = App::getInstance2()->getTable2($model_name, $this->currentClass);
-  }*/
-
   /**
    * Récupère le nom de la classe sans le chemin, ex : App\src\TestBundle\Controller\IndexController => TestBundle;
    * @withoutName = bool, si true alors TestBundle = Test
