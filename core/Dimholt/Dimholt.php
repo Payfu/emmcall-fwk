@@ -2,6 +2,7 @@
 namespace Core\Dimholt;
 
 use Core\Config;
+use Core\Tools\Tools;
 
 class Dimholt
 {
@@ -34,7 +35,6 @@ class Dimholt
    * @action : add = on ajoute
    */
   private function sendByPost($idUser, $action = false, $json = false){
-    $p = new \Core\Password\Password();
     // qy2q1Cgw655cb86d8a93cec
     $add = $action ? 'add' : false;
     
@@ -43,7 +43,7 @@ class Dimholt
           'clef'        => $this->_dmlt_key,
           'id'          => $idUser,
           'ip'          => $this->getIpAddress(),
-          'user_agent'  => $p->encodeStr($_SERVER['HTTP_USER_AGENT']),
+          'user_agent'  => Tools::encodeStr($_SERVER['HTTP_USER_AGENT']),
           'action'      => $add // Si add alors on considère que l'authentification est erronée, si false alors c'est un contrôle des datas
       )
     );
