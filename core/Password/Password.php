@@ -12,26 +12,30 @@ class Password
    * Génération de password
    */
   public static function generate($length = 10, $type = 'crypt') : string {
+   
+    // $this étant proscrit dans une méthode static, il faut instancer la classe sur elle-même.
+    $class = __CLASS__;
+    $p = new $class;
     
     $str      = "";
     for($i = 0; $i < $length; $i++){
       if($type == 'crypt'){
-        $v = [$this->getAlphaMin(), $this->getAlphaMaj(), $this->getNumeric(), $this->getSpecChar()];
+        $v = [$p->getAlphaMin(), $p->getAlphaMaj(), $p->getNumeric(), $p->getSpecChar()];
         $str .= $v[rand(0,3)];
       }
       
       if($type == 'alphanum'){
-        $v = [$this->getAlphaMin(), $this->getAlphaMaj(), $this->getNumeric()];
+        $v = [$p->getAlphaMin(), $p->getAlphaMaj(), $p->getNumeric()];
         $str .= $v[rand(0,2)];
       }
       
       if($type == 'alpha'){
-        $v = [$this->getAlphaMin(), $this->getAlphaMaj()];
+        $v = [$p->getAlphaMin(), $p->getAlphaMaj()];
         $str .= $v[rand(0,1)];
       }
       
       if($type == 'num'){
-        $v = [$this->getNumeric(), $this->getNumeric()];
+        $v = [$p->getNumeric(), $p->getNumeric()];
         $str .= $v[rand(0,1)];
       }
     }
