@@ -9,7 +9,7 @@ class Dimholt
   private $_dmlt_url;
   public function __construct()
   {
-    $config = Config::getInstance(ROOT . '/config/config.php');
+    $config = Config::getInstance(yaml_parse_file(ROOT . '/config/config.yml'));
     
     $this->_dmlt_key = $config->get('dmlt_key');
     $this->_dmlt_url = $config->get('dmlt_url');
