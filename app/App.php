@@ -78,6 +78,8 @@ class App
    */
   public static function Load()
   {
+    session_start();
+    
     require_once  ROOT . '/app/Autoloader.php';
     App\Autoloader::register();
 
