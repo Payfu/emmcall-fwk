@@ -20,6 +20,7 @@ class Token
   */
  public function checkToken($token) : bool
  {
+   if(!isset($_SESSION['pg_a'])){ die("Erreur de token !"); }
    if($this->decodeToken($token) === $this->getUri() AND $token == $_SESSION['pg_a'] ){ return true; }
    return false;
  }
