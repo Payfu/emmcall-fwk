@@ -79,10 +79,16 @@ class Controller
     /**
      * Renvoie les bon header en fonction de la situation
      */
-    protected function forbidden()
+    protected function forbidden(string $value=null)
     {
-        header('HTTP/1.0 403 Forbidden');
-        die('Acces refusé');
+      // On enregistre $value en session
+      if($value <> null){
+        $_SESSION['SESS_ERROR_403'] = $value;
+      }
+      $url = WEBROOT.'/error403';
+      // On redirige vers la route par defaut du controller app/controller/ErrorController.php
+      header('Location:'.$url);
+      exit;
     }
     
     /*
