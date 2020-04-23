@@ -289,13 +289,11 @@ class Table
     // On transforme le tableau $attributes en string
     $attr = '';
     if($attributes){ $attr = implode(',',$attributes);}
-    $fn = substr(base64_encode($statement.",".$attr.",".$one), -200);
+    
+    // Création du nom du fichier
+    $fn = sha1($statement.",".$attr.",".$one);
     
     $filename = ROOT."/core/Table/tmp/".$fn. ".dat";
-    
-    //var_dump(ROOT);
-    /*var_dump(filemtime(ROOT.'/'.$filename));
-    exit;*/
     
     // Si on demande de mettre en cache
     if($cache){
