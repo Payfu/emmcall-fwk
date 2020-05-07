@@ -19,6 +19,7 @@ class GetSetController
   private $_nom_table;
   private $_nom_table_format;
   private $_columns;
+  private $_auto_increment_columns = [];
   private $_attributes;
   private $_constructor;
   private $_get_set;
@@ -72,8 +73,30 @@ class GetSetController
       else{ $dataType = null; }
       
       $columns[$v->COLUMN_NAME] = $dataType;
+      // On check si c'est un auto_increment
+      $this->isAutoIncrement($v->COLUMN_NAME);
     }
+    
     $this->_columns = $columns;
+  }
+  
+  /*
+   * On check si le champ passé en paramètre est un champ auto_incrémenté
+   */
+  private function isAutoIncrement(string $fieldName){
+    $db_type = ($this->_db_type == 'sqlsrv') ? 'TABLE_CATALOG' : 'TABLE_SCHEMA';
+    $sql = ($this->_db_type == 'sqlsrv') 
+      ? "SELECT is_identity FROM sys.columns WHERE object_id = object_id('{$this->_nom_base}.dbo.{$this->_nom_table}') AND name = '{$fieldName}'" 
+      : "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE {$db_type} = '{$this->_nom_base}' AND TABLE_NAME = '{$this->_nom_table}' AND COLUMN_NAME = '{$fieldName}'
+          AND DATA_TYPE = 'int' AND COLUMN_DEFAULT IS NULL AND IS_NULLABLE = 'NO' AND EXTRA like '%auto_increment%'";
+    
+    $res = $this->_db->query($sql);
+    
+    // on crée un tableau avec le nom du champs auto_increment
+    if($this->_db_type == 'sqlsrv' && $res[0]->is_identity == '1'){
+      $this->_auto_increment_columns[] = $fieldName;
+    } 
+    // Faire la même chose pour mysql !
   }
   
   /*
@@ -144,13 +167,6 @@ class GetSetController
    */
   private function createGetEntity(){
     
-    // On crée la liste des champs à inclure 
-    /*$list = '';
-    foreach (array_keys($this->_columns) as $k) {
-      $list .= "\t".'
-       $this->__'.$k.' = $f->'.$k.';';
-    }*/
-    
     $this->_get_entity = '
   /*
   * Récupération de l\'entité
@@ -174,15 +190,9 @@ class GetSetController
    * A modifier
    */
   private function createCreateEntity(){
+    // On crée un tableau avec les champs auto_incrémentés
+    $autoIncrement = (count($this->_auto_increment_columns) > 0) ? "['".implode("','", $this->_auto_increment_columns)."']": null;
     
-    // On crée la liste des champs à inclure à l'exception de __id
-    /*$list = '';
-    foreach (array_keys($this->_columns) as $k) {
-      if($k <> "id"){
-        $list .= "\t".'
-        "'.$k.'" => $this->__'.$k.',';
-      }
-    }*/
     
     $this->_create_entity = '
   /*
@@ -190,7 +200,7 @@ class GetSetController
   */
   public function createEntity(){
     $t = $this->'.$this->_nom_table_format.';
-    $array = $this->constructEntity($this, __FUNCTION__, $this->getFields(get_object_vars($this), true));
+    $array = $this->constructEntity($this, __FUNCTION__, $this->getFields(get_object_vars($this), true), '.$autoIncrement.');
     
     // On enregistre la ligne
     return $t->insert($array);
