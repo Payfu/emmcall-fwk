@@ -131,7 +131,7 @@ class Controller
    * Cette méthode est appelée depuis un nomTableObj.
    * En fonction de si c'est un getEntity, createEntity, ou updateEntity on construit pas de la même façons
    */
-  protected function constructEntity($entity, $action, $fields=false, $exclusions = ['id']){
+  protected function constructEntity($entity, $action, $fields=false, $exclusions = []){
     
     $arrCreateEntity = $arrUpdateEntity=[];
     
@@ -156,7 +156,10 @@ class Controller
       // updateEntity
       // On récupère les données qui ont été modifié par setNomChamp() dans l'entité
       if($action === 'updateEntity'){
-        $arrUpdateEntity[$k] = $entity->$prop;
+        // Les exclusions contiennent les champs auto_incrémentés, par défaut: id
+        if(!in_array($k, $exclusions) ){
+          $arrUpdateEntity[$k] = $entity->$prop;
+        }
       }
     }
     
