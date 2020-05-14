@@ -50,12 +50,16 @@ database:
             NULL
         db_host:
             NULL
+    
+    # Paramètres pour de l'HYPERFILE SQL
     db3:
         db_type:
-            sqlsrv/mysql
+            HFSQL
+        db_prov:
+            NULL
         db_user:
             NULL
-        db_pass:
+        db_port:
             NULL
         db_name:
             NULL
