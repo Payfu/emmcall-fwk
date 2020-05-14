@@ -34,15 +34,15 @@ class GetSetController
     ini_set('display_errors', '1');
     define('ROOT', dirname(__FILE__));
     
-    $c  =  yaml_parse_file(substr(ROOT, 0, -12) . 'config/config.yml')['database'][$ClefDatabase];
+    $array  =  yaml_parse_file(substr(ROOT, 0, -12) . 'config/config.yml')['database'][$ClefDatabase];
     
-    $this->_db = new Core\DataBase\TypeDataBase($c['db_name'],$c['db_user'],$c['db_pass'],$c['db_host'],$c['db_type']);
+    $this->_db = new Core\DataBase\TypeDataBase($array);
     
     $this->_nom_table = $nomTable;
     // NOM_TABLE => NomTable
     $this->_nom_table_format = str_replace(' ', '', ucwords(str_replace('_', " ", strtolower($nomTable))));
-    $this->_nom_base = $c['db_name'];
-    $this->_db_type = $c['db_type'];
+    $this->_nom_base = $array['db_name'];
+    $this->_db_type = $array['db_type'];
     $this->_nom_clef_base = $ClefDatabase;
     
   }
