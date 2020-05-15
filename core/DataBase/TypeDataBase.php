@@ -4,8 +4,6 @@ namespace Core\DataBase;
 
 // l'antislashe devant PDO permet d'appeler PDO à la racine de PHP sans tenir compte du namespace
 use \PDO;
-//use Core\Config;
-
 
 /**
  * Description of DataBase
@@ -19,18 +17,27 @@ class TypeDataBase extends DataBase
     private $db_pass;
     private $db_host;
     private $db_type;
+    private $db_prov;
+    private $db_port;
     private $pdo;
 
     private static $_instance;
 
-    public function __construct($db_name, $db_user, $db_pass, $db_host, $db_type)
+    public function __construct( array $dbParam = [])
     { 
-      $this->db_name = $db_name;
-      $this->db_user = $db_user;
-      $this->db_pass = $db_pass;
-      $this->db_host = $db_host;
-      $this->db_type = strtoupper($db_type);
+      if(count($dbParam) == 0){ die("Aucun paramètres de bdd"); }
+      
+      $type = strtoupper($dbParam['db_type']);
+      $this->db_name = isset($dbParam['db_name']) ? $dbParam['db_name'] : NULL ;
+      $this->db_user = isset($dbParam['db_user']) ? $dbParam['db_user'] : NULL ;
+      $this->db_pass = isset($dbParam['db_pass']) ? $dbParam['db_pass'] : NULL ;
+      $this->db_host = isset($dbParam['db_host']) ? $dbParam['db_host'] : NULL ;
+      $this->db_prov = isset($dbParam['db_prov']) ? $dbParam['db_prov'] : NULL ;
+      $this->db_port = isset($dbParam['db_port']) ? $dbParam['db_port'] : NULL ;
+      
+      $this->db_type = $type;
     }
+    
 
     public static function getInstance()
     {
@@ -46,12 +53,12 @@ class TypeDataBase extends DataBase
       // Si l'objet DataBase n'a pas de propriété PDO, alors on initialise le tout. Ceci évite les connexions à répétition.
       if($this->pdo === null)
       {
-        
         if($this->db_type === "SQLSRV"){
           $options = [];
           $pdo = new PDO("sqlsrv:Server={$this->db_host};Database={$this->db_name}", $this->db_user, $this->db_pass, $options);
           $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
+        
         if($this->db_type === "MYSQL"){
           $options = array( PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',);
           $pdo = new PDO('mysql:dbname='.$this->db_name.';host='.$this->db_host, $this->db_user, $this->db_pass, $options);
@@ -65,10 +72,11 @@ class TypeDataBase extends DataBase
     }
     
     /**
-     * Récupération des résultats
+     * Récupération des résultats Pour SQLSRV et MYSQL
+     * IMPORTANT : ça ne marchera pas pour HFSQL
      */
     public function query($statement, $class_name = null, $one = false)
-    {        
+    { 
         // getPDO revient à appeler la connexion à la base
         $req = $this->getPDO()->query($statement);
         
@@ -82,13 +90,9 @@ class TypeDataBase extends DataBase
             return $req;
         }
         
-        
         // Fetch_all met les réultat dans un tableau 
         // et le fetch_obj réorganise les résultats dans un objet plutôt qu'un tableau.
         // en gros il y a un tableau qui contient des objets
-        //$data = $req->fetchAll(PDO::FETCH_OBJ);
-        
-        
         if($class_name === null) {
             $req->setFetchMode(PDO::FETCH_OBJ);
         } else {   
