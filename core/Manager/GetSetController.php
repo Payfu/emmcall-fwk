@@ -87,16 +87,19 @@ class GetSetController
     $db_type = ($this->_db_type == 'sqlsrv') ? 'TABLE_CATALOG' : 'TABLE_SCHEMA';
     $sql = ($this->_db_type == 'sqlsrv') 
       ? "SELECT is_identity FROM sys.columns WHERE object_id = object_id('{$this->_nom_base}.dbo.{$this->_nom_table}') AND name = '{$fieldName}'" 
-      : "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE {$db_type} = '{$this->_nom_base}' AND TABLE_NAME = '{$this->_nom_table}' AND COLUMN_NAME = '{$fieldName}'
+      : "SELECT COLUMN_NAME, EXTRA FROM INFORMATION_SCHEMA.COLUMNS WHERE {$db_type} = '{$this->_nom_base}' AND TABLE_NAME = '{$this->_nom_table}' AND COLUMN_NAME = '{$fieldName}'
           AND DATA_TYPE = 'int' AND COLUMN_DEFAULT IS NULL AND IS_NULLABLE = 'NO' AND EXTRA like '%auto_increment%'";
     
     $res = $this->_db->query($sql);
     
     // on crée un tableau avec le nom du champs auto_increment
-    if($this->_db_type == 'sqlsrv' && $res[0]->is_identity == '1'){
+    if($this->_db_type == 'sqlsrv' && isset($res[0]->is_identity) && $res[0]->is_identity == '1'){
       $this->_auto_increment_columns[] = $fieldName;
     } 
-    // Faire la même chose pour mysql !
+    // On fait la même chose pour mysql !
+    if($this->_db_type == 'mysql' && isset($res[0]->EXTRA) && $res[0]->EXTRA == 'auto_increment'){
+      $this->_auto_increment_columns[] = $res[0]->COLUMN_NAME;
+    }
   }
   
   /*
