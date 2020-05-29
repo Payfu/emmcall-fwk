@@ -113,7 +113,8 @@ class App
   {
     foreach(self::$_databases as $k=>$v){
       if($k === $nomBase){
-        $this->db_instance = new MysqlDataBase($v['db_name'],$v['db_user'],$v['db_pass'],$v['db_host'],$v['db_type']);
+        // $this->db_instance = new MysqlDataBase($v['db_name'],$v['db_user'],$v['db_pass'],$v['db_host'],$v['db_type']);
+        $this->db_instance = new MysqlDataBase($v);
         // c'est la bonne base con casse la boucle
         break;
       }
