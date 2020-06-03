@@ -1,6 +1,6 @@
 <?php
 use Core\Config;
-use Core\DataBase\MysqlDataBase;
+use Core\DataBase\TypeDataBase;
 
 /*
  * Ici se trouvent des variables static dont une permettant de sauvegarder la connexion à la base de donnée
@@ -29,7 +29,7 @@ class App
   private static $_instance;
 
   /*
-   * Récupération (via config/config.php) des différentes varables comme le nom du site, la description etc...
+   * Récupération (via config/config.yml) des différentes varables comme le nom du site, la description etc...
    */
   public function __construct()
   {
@@ -105,17 +105,15 @@ class App
     return new $className($this->getDb($nomBase));
   }
 
-
   /**
   * Second Factory pour la base de données
   */
   public function getDb($nomBase)
-  {
+  { 
     foreach(self::$_databases as $k=>$v){
       if($k === $nomBase){
-        // $this->db_instance = new MysqlDataBase($v['db_name'],$v['db_user'],$v['db_pass'],$v['db_host'],$v['db_type']);
-        $this->db_instance = new MysqlDataBase($v);
-        // c'est la bonne base con casse la boucle
+        $this->db_instance = new TypeDataBase($v);
+        // c'est la bonne base on casse la boucle
         break;
       }
     }
