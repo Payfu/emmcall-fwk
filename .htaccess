@@ -1,6 +1,4 @@
 RewriteEngine On
-#RewriteRule .* testing.php
-RewriteRule t test2/index.php
 RewriteRule (.*)    http://{HTTP_HOST}{REQUEST_URI}
 RewriteRule ^.*$    undefined
 RewriteRule picture/([a-zA-Z0-9]+)/([a-zA-Z\-0-9/]+).(jpg|png|gif)    app/Src/$1Bundle/public/img/$2.$3
