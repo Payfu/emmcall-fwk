@@ -1,0 +1,11 @@
+RewriteEngine On
+#RewriteRule .* testing.php
+RewriteRule t test2/index.php
+RewriteRule (.*)    http://{HTTP_HOST}{REQUEST_URI}
+RewriteRule ^.*$    undefined
+RewriteRule picture/([a-zA-Z0-9]+)/([a-zA-Z\-0-9/]+).(jpg|png|gif)    app/Src/$1Bundle/public/img/$2.$3
+RewriteRule picture/([a-zA-Z\-0-9/]+).(jpg|png|gif)    public/$1.$2
+RewriteRule scripts/([a-zA-Z0-9]+)/(js|css|typo)/([a-zA-Z\-0-9=\./]+).(js|css)    app/Src/$1Bundle/public/$2/$3.$4
+RewriteRule scripts/(js|css|typo)/([a-zA-Z\-0-9=\./]+).(js|css)    public/$1/$2.$3
+RewriteRule scripts/(fonts)/([a-zA-Z\-0-9=\./]+).(eot|svg|ttf|woff)    public/$1/$2.$3
+RewriteRule ^(.*)$    index.php?url=$1
