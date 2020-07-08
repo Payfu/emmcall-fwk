@@ -1,7 +1,7 @@
 <?php
 use Core\Config;
 use Core\DataBase\TypeDataBase;
-
+use Core\Yaml\YamlParseFilePhp;
 /*
  * Ici se trouvent des variables static dont une permettant de sauvegarder la connexion à la base de donnée
  * Pour appeler une méthode statique seule cette syntaxe suffit : App::nomMethode();
@@ -33,9 +33,15 @@ class App
    */
   public function __construct()
   {
+    // On charge la classe YamlParseFilePhp
+    $yamlPhp = new YamlParseFilePhp();
+    
     //$config = Config::getInstance(ROOT . '/config/config.php');
     // On converti le fichier yaml en array et on le transmet
-    $config = Config::getInstance(yaml_parse_file(ROOT . '/config/config.yml'));
+    $urlYaml = ROOT . '/config/config.yml';
+    $yamlParse = READ_YAML ? yaml_parse_file($urlYaml) : $yamlPhp->convertYamlToArray($urlYaml);
+    //$config = Config::getInstance(yaml_parse_file(ROOT . '/config/config.yml'));
+    $config = Config::getInstance($yamlParse);
 
     // la clef database nécessite l'appel de la méthode getDatabase
     self::$_databases   = $config->get('database');    
