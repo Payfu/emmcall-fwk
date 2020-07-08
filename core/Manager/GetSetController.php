@@ -5,6 +5,7 @@ require_once '../DataBase/DataBase.php';
 require_once '../DataBase/TypeDataBase.php';
 
 use Core\Config;
+use Core\Yaml\YamlParseFilePhp;
 /**
  * Description of GetSetController
  * Cette classe permet de créer les getters et setters en fonction de la table qui lui est spécifiée.
@@ -34,9 +35,14 @@ class GetSetController
     ini_set('display_errors', '1');
     define('ROOT', dirname(__FILE__));
     
-    $array  =  yaml_parse_file(substr(ROOT, 0, -12) . 'config/config.yml')['database'][$ClefDatabase];
+    // On charge la classe YamlParseFilePhp
+    $yamlPhp = new YamlParseFilePhp();
     
-    $this->_db = new Core\DataBase\TypeDataBase($array);
+    $urlYaml = substr(ROOT, 0, -12) . 'config/config.yml';
+    //$array  =  yaml_parse_file(substr(ROOT, 0, -12) . 'config/config.yml')['database'][$ClefDatabase];
+    $array = READ_YAML ? yaml_parse_file($urlYaml) : $yamlPhp->convertYamlToArray($urlYaml);
+    //$this->_db = new Core\DataBase\TypeDataBase($array);
+    $this->_db = new Core\DataBase\TypeDataBase($array['database'][$ClefDatabase]);
     
     $this->_nom_table = $nomTable;
     // NOM_TABLE => NomTable
@@ -228,16 +234,6 @@ class GetSetController
    * Création de l'update entity
    */
   private function createUpdateEntity(){
-    
-    // On crée la liste des champs à inclure 
-    /*$list = '';
-    foreach (array_keys($this->_columns) as $k) {
-      // ID ne fait pas parti des champs modifiables
-      if($k != 'id'){
-        $list .= "\t".'
-        "'.$k.'"       => $this->__'.$k.',';
-      }
-    }*/
     
     $this->_update_entity = '
   /*
