@@ -10,7 +10,7 @@ namespace Core\DataBase;
 // l'antislashe devant COM permet d'appeler COM à la racine de PHP sans tenir compte du namespace
 use \COM;
 use Core\Config;
-
+use Core\Yaml\YamlParseFilePhp;
 
 /**
  * Description of DataBase
@@ -28,9 +28,14 @@ class HyperFileDataBase extends DataBase
 
     public function __construct()
     {
+      // On charge la classe YamlParseFilePhp
+      $yamlPhp = new YamlParseFilePhp();
+      
       // On récupère le fichier converti en tableau
-      $array = yaml_parse_file(ROOT. '/config/config.yml')['database'];
-      $listKeys = array_keys($array);
+      //$array = yaml_parse_file(ROOT. '/config/config.yml')['database'];
+      $array = READ_YAML ? yaml_parse_file(ROOT. '/config/config.yml') : $yamlPhp->convertYamlToArray(ROOT. '/config/config.yml');
+      //$listKeys = array_keys($array);
+      $listKeys = array_keys($array['database']);
       
       // On check les data et on récupère les données hfsql
       foreach ($listKeys as $k) {
