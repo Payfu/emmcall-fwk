@@ -3,6 +3,7 @@ namespace Core\Dimholt;
 
 use Core\Config;
 use Core\Tools\Tools;
+use Core\Yaml\YamlParseFilePhp;
 
 class Dimholt
 {
@@ -10,7 +11,13 @@ class Dimholt
   private $_dmlt_url;
   public function __construct()
   {
-    $config = Config::getInstance(yaml_parse_file(ROOT . '/config/config.yml'));
+    // On charge la classe YamlParseFilePhp
+    $yamlPhp = new YamlParseFilePhp();
+    
+    $urlYaml = ROOT . '/config/config.yml';
+    //$config = Config::getInstance(yaml_parse_file(ROOT . '/config/config.yml'));
+    $yamlParse = READ_YAML ? yaml_parse_file($urlYaml) : $yamlPhp->convertYamlToArray($urlYaml);
+    $config = Config::getInstance($yamlParse);
     
     $this->_dmlt_key = $config->get('dmlt_key');
     $this->_dmlt_url = $config->get('dmlt_url');
@@ -65,12 +72,6 @@ class Dimholt
     exit(); */
    
     // Si true alors on retourne un json sinon c'est un objet
-    /*if($json){
-      return $result;
-    } else {
-      return json_decode($result);
-    }*/
-    
     return $json ? $result : json_decode($result);
   }
   
