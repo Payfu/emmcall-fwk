@@ -1,67 +1,42 @@
 ### IMPORTANT ###
 # Pour ajouter une nouvelle clef et sa valeur il faut la déclarer dans app\App.php
 meta:
-    title:
-        Titre
-    description:
-        Description du site
-    author: 
-        Emmanuel CALLEC
-    lang:
-        fr
-    copyright:
-        ©xxxx
+    title: Titre
+    description: Description du site
+    author: Emmanuel CALLEC
+    lang: fr
+    copyright: ©xxxx
         
 dimholt:
-    dmlt_key:
-        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    dmlt_url:
-        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    dmlt_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    dmlt_url: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         
 contact:
-    contact_from:
-        contact@domaine.com
-    contact_objet:
-        Message en provenance du site Name
+    contact_from: contact@domaine.com
+    contact_objet: Message en provenance du site Name
 
 database:
     # Indiquer les clefs en minuscule
     # nom de la clef en minuscule et sans espace
     db1:
-        db_type:
-            sqlsrv/mysql
-        db_user:
-            NULL
-        db_pass:
-            NULL
-        db_name:
-            NULL
-        db_host:
-            NULL
+        db_type: sqlsrv/mysql
+        db_user: NULL
+        db_pass: NULL
+        db_name: NULL
+        db_host: NULL
     
     db2:
-        db_type:
-            sqlsrv/mysql
-        db_user:
-            NULL
-        db_pass:
-            NULL
-        db_name:
-            NULL
-        db_host:
-            NULL
+        db_type: sqlsrv/mysql
+        db_user: NULL
+        db_pass: NULL
+        db_name: NULL
+        db_host: NULL
     
     # Paramètres pour de l'HYPERFILE SQL
     db3:
-        db_type:
-            HFSQL
-        db_prov:
-            NULL
-        db_user:
-            NULL
-        db_port:
-            NULL
-        db_name:
-            NULL
-        db_host:
-            NULL
+        db_type: HFSQL
+        db_prov: NULL
+        db_user: NULL
+        db_port: NULL
+        db_name: NULL
+        db_host: NULL
