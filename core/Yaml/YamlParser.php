@@ -1,11 +1,11 @@
 <?php
 namespace Core\Yaml;
-
+use Core\Yaml\YamlParseFilePhp;
 /**
  * Description of YamlParser
  * Convertiseur Yaml -> Array()
  *
- * @author dev.hrteam
+ * @author emmanuel callec
  */
 class YamlParser
 {
@@ -22,7 +22,9 @@ class YamlParser
    * @return array
    */
   public function getArray() : array {   
-    $array_full = yaml_parse_file($this->_yamlFileName);
+    $yamlPhp = new YamlParseFilePhp();
+    // Si READ_YAML est true alors l'extension est installée sinon c'est la classe YamlParseFilePhp qui prend le relais
+    $array_full = READ_YAML ? yaml_parse_file($this->_yamlFileName) : $yamlPhp->convertYamlToArray($this->_yamlFileName);
     
     // On vérifie si une clef import@ existe
     if(key_exists("import@", $array_full)){
@@ -42,13 +44,21 @@ class YamlParser
    * On recrée les tableaux en provenance du ou des imports
    */
   private function createImportArray($importArray, $array_full) : array {
+    
     // On retire le nom du fichier de la routes originel pour ne garder que le chemin
     $lastWord = explode('/',$this->_yamlFileName);
     $chemin = str_replace(end($lastWord), "", $this->_yamlFileName);
     
+    // On charge la classe YamlParseFilePhp
+    $yamlPhp = new YamlParseFilePhp();
+    
     // On récupère le contenu des fichier yml converti en array
     foreach ($importArray as $v) {  
-      $tab[] = yaml_parse_file($chemin.$v.'.yml');
+      
+      // Si READ_YAML est true alors l'extension est installée sinon c'est la classe YamlParseFilePhp qui prend le relais
+      $tab[] = READ_YAML ? yaml_parse_file($chemin.$v.'.yml') : $yamlPhp->convertYamlToArray($chemin.$v.'.yml');
+      
+      //$tab[] = yaml_parse_file($chemin.$v.'.yml');
     }
     
     // On fusionne tous les tableaux
