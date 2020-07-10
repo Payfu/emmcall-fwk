@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" href="picture/favicon.png" />       
     
     <!--Jquery UI-->
-    <link rel="stylesheet" href="scripts/css/Jquery/jquery-ui-1.12.0.css?<?php echo rand();?>"/>
+    <link rel="stylesheet" href="scripts/css/jquery/jquery-ui-1.12.0.css?<?php echo rand();?>"/>
     
     <!--Boostrap-->
     <link rel="stylesheet" href="scripts/css/bootstrap/bootstrap-4.3.1.min.css?<?php echo rand();?>">
