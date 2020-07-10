@@ -3,4 +3,4 @@
 define('ENV', "dev");
 
 // TRUE si l'extension YAML est installée
-define('READ_YAML', false);
+define('READ_YAML', true);
