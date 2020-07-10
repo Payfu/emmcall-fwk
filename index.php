@@ -20,7 +20,7 @@ if(ENV === 'dev'){  ini_set('display_errors', '1'); }
 App::Load();
 
 // On récupère l'url
-$page = $_GET['url'] ?? '';
+$page = isset($_GET['url']) ? $_GET['url'] : '';
 
 // Constante : contient la valeur passer en GET
 define('FULL_URI', $page);
