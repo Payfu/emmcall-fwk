@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1); // Déclanche une erreur en cas de scalaire incorrect
 
-namespace App\src;
+namespace App\Src;
 
 use Core\Controller\Controller;
 use App;
@@ -14,7 +14,6 @@ use App;
  */
 class AppController extends Controller
 {
-  
   /**
    * Initialisation des variables
    * Toutes ces variable sont lu dans core/controller/controller.php
@@ -24,12 +23,11 @@ class AppController extends Controller
   private $currentClass;
   protected $template = 'default';
   
-  
   public function __construct($classChild, $newTemplate = null)
   {
     if(!is_null($newTemplate)){ $this->template = $newTemplate; }
     $this->currentClass = $this->getBundleName($classChild);
-    $this->viewPath     = ROOT    . '/app/src/'.$this->getBundleName($classChild).'/Views/';
+    $this->viewPath     = ROOT    . '/app/Src/'.$this->getBundleName($classChild).'/Views/';
     $this->templatePath = ROOT    . '/app/Views/';
     $this->jsPath       = WEBROOT . '/scripts/'.$this->getBundleName($classChild, true).'/js/';
     $this->cssPath      = WEBROOT . '/scripts/'.$this->getBundleName($classChild, true).'/css/';
