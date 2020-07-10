@@ -10,8 +10,8 @@ use Core\Router\Routing;
 class Controller
 {
     /*
-     * C'est variable son créer dans App\AppController
-     */
+      * Ces variables sont créés dans App\AppController
+      */
     protected $viewPath;
     protected $template;
     protected $templatePath;
@@ -19,15 +19,13 @@ class Controller
     protected $cssPath;
     protected $_ymlFile = ROOT."/app/Routes/routes.yml";
 
-
-
     protected function render($view, $variables = [])
     {      
       $content = '';
-      //var_dump($this->viewPath. str_replace('.', '/', $view));
+      
       ob_start();
 
-      // Les variables récupéré ici sont utilisé en aval dans le template
+      // Les variables récupérées ici sont utilisées en aval dans le template
       extract($variables);
 
       // On charge le chemin de la page à afficher
@@ -41,44 +39,44 @@ class Controller
     }
     
     /*
-     * On tape le nom d'une route et il récupère le chemin "path"
-     * @routeName = nom de la route
-     * @$params = tableau des paramètres GET de la route
-     */
+       * On tape le nom d'une route et il récupère le chemin "path"
+       * @routeName = nom de la route
+       * @$params = tableau des paramètres GET de la route
+       */
     protected function redirect($routeName, $params = null, bool $redirect=true){
-      $r  = new Routing($this->_ymlFile, null);
+      $r = new Routing($this->_ymlFile, null);
       return $r->redirectManager($routeName, $params, $redirect);
     }
     
     /*
-     * Appel des scripts JS et CSS en fonction des pages
-     * Avec la syntaxe suivante : $tab = $this->scripts(['upload.css', 'upload.js', 'https://domaine.fr/script.min.js']);
-     */
+       * Appel des scripts JS et CSS en fonction des pages
+       * Avec la syntaxe suivante : $tab = $this->scripts(['upload.css', 'upload.js', 'https://domaine.fr/script.min.js']);
+       */
     protected function scripts($tab=[])
     {
-        $scripts_js = $scripts_css = '';
-        if(!empty($tab))
-        {   
-            foreach ($tab as $value) {
-                $sanitize_name = str_replace(' ', '', $value); // On supprime les éventuelles espaces
-                $ext = strtolower(substr(strrchr($sanitize_name, '.'), 1)); // On récupère l'extension sans le point
+      $scripts_js = $scripts_css = '';
+      if(!empty($tab))
+      {   
+        foreach ($tab as $value) {
+          $sanitize_name = str_replace(' ', '', $value); // On supprime les éventuelles espaces
+          $ext = strtolower(substr(strrchr($sanitize_name, '.'), 1)); // On récupère l'extension sans le point
 
-                if(filter_var($sanitize_name, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED))
-                { $url = filter_var($sanitize_name, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED); $type= 'isUrl'; }
-                else{$url = $sanitize_name; $type = 'isNotUrl';}
+          if(filter_var($sanitize_name, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED))
+          { $url = filter_var($sanitize_name, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED); $type= 'isUrl'; }
+          else{$url = $sanitize_name; $type = 'isNotUrl';}
 
-                if    ($ext === 'css' and $type === 'isUrl') { $scripts_css .= "\t".'<link rel="stylesheet" href="'.$url.'">'."\n"; }
-                elseif($ext === 'css' and $type === 'isNotUrl') { $scripts_css .= "\t".'<link rel="stylesheet" href="'.$this->cssPath.$url.'?'.uniqid().'">'."\n"; }
-                elseif( $ext === 'js' and $type === 'isUrl') { $scripts_js .= "\t".'<script src="'.$url.'"></script>'."\n"; }
-                elseif( $ext === 'js' and $type === 'isNotUrl') { $scripts_js .= "\t".'<script src="'.$this->jsPath.$url.'?'.uniqid().'"></script>'."\n"; }
-            }
+          if    ($ext === 'css' and $type === 'isUrl') { $scripts_css .= "\t".'<link rel="stylesheet" href="'.$url.'">'."\n"; }
+          elseif($ext === 'css' and $type === 'isNotUrl') { $scripts_css .= "\t".'<link rel="stylesheet" href="'.$this->cssPath.$url.'?'.uniqid().'">'."\n"; }
+          elseif( $ext === 'js' and $type === 'isUrl') { $scripts_js .= "\t".'<script src="'.$url.'"></script>'."\n"; }
+          elseif( $ext === 'js' and $type === 'isNotUrl') { $scripts_js .= "\t".'<script src="'.$this->jsPath.$url.'?'.uniqid().'"></script>'."\n"; }
         }
-        return compact('scripts_js', 'scripts_css');
+      }
+      return compact('scripts_js', 'scripts_css');
     }
 
     /**
-     * Renvoie les bon header en fonction de la situation
-     */
+      * Renvoie les bon header en fonction de la situation
+      */
     protected function forbidden(string $value=null)
     {
       // On enregistre $value en session
@@ -86,21 +84,24 @@ class Controller
         $_SESSION['SESS_ERROR_403'] = $value;
       }
       $url = WEBROOT.'/error403';
+
       // On redirige vers la route par defaut du controller app/controller/ErrorController.php
       header('Location:'.$url);
       exit;
     }
     
     /*
-     * Gestion de l'erreur 404
-     */
+      * Gestion de l'erreur 404
+      */
     protected function notFound(string $value=null)
     {
       // On enregistre $value en session
       if($value <> null){
         $_SESSION['SESS_ERROR_404'] = $value;
       }
+      
       $url = WEBROOT.'/error404';
+      
       // On redirige vers la route par defaut du controller app/controller/ErrorController.php
       header('Location:'.$url);
       exit;
