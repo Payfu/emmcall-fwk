@@ -63,8 +63,26 @@ class YamlParseFilePhp
         // Niveau 2 : _controller, _methode ou clef libre
         if($nv == 2){
           $v = explode(':', $cLine, 2);
-          // On supprime les espaces avant et après mais aussi les éventuelles '"' (guillement double avant et après)
-          $arrFinal[$keyNv0][$keyNv1][$v[0]] = trim(trim($v[1]), '"');
+          
+          if(isset($v[1])){
+            // On supprime les espaces avant et après mais aussi les éventuelles '"' (guillement double avant et après)
+            $arrFinal[$keyNv0][$keyNv1][$v[0]] = trim(trim($v[1]), '"');
+          } else {
+            $arrFinal[$keyNv0][$keyNv1] = trim(trim($v[0]), '"');
+          }
+          $keyNv2 = isset($v[0]) ? $v[0] : null;
+        }
+        
+        // Niveau 3 : informations de connexion à la base de donnée
+        if($nv == 3){
+          $v = explode(':', $cLine, 2);
+          // si les données sont présenté comme ceci : "db_type: sqlsrv/mysql" ou juste ceci "sqlsrv/mysql"
+          if(isset($v[1])){
+            // On supprime les espaces avant et après mais aussi les éventuelles '"' (guillement double avant et après)
+            $arrFinal[$keyNv0][$keyNv2][$v[0]] = trim(trim($v[1]), '"');
+          } else {
+            $arrFinal[$keyNv0][$keyNv2] = trim(trim($v[0]), '"');
+          }
         }
       }
     }
