@@ -1,0 +1,13 @@
+<?php
+namespace App\src\%bundleName%\Table;
+
+use Core\Table\Table;
+
+/**
+ *
+ * @author payfu
+ */
+class %tableName%Table extends Table
+{
+    protected $table = "%tableNameUnformat%";
+}

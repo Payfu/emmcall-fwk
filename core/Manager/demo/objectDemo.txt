@@ -1,0 +1,13 @@
+<?php
+namespace App\src\%bundleName%\Objects;
+
+use App\src\AppController;
+/**
+ * Description of %objectName%Obj
+ * Liste des getters et setters
+ * @author EmmCall
+ */
+class %objectName%Obj extends AppController
+{
+  %gettersSetters%
+}
