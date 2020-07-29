@@ -102,13 +102,12 @@ class App
   public function getTable($nameTable, $nomBase, $fromBundle = null)
   {
     if($fromBundle){
-      $className = "\\app\\Src\\{$fromBundle}\\Table\\" . ucfirst($nameTable) . "Table"; // ex : App\src\NomBundle\Table\CategoriesTable
+      $className = "\\App\\Src\\{$fromBundle}\\Table\\" . ucfirst($nameTable) . "Table"; // ex : App\src\NomBundle\Table\CategoriesTable
     } else {
-      $className = "\\app\\Table\\" . ucfirst($nameTable) . "Table"; // ex : App\Table\CategoriesTable
+      $className = "\\App\\Table\\" . ucfirst($nameTable) . "Table"; // ex : App\Table\CategoriesTable
     }
     // Instanciation de la classe
     // getDb() doit recevoir le paramètre qui identifie la bonne bdd !
-    // Si cette ligne buggue alors il faut mettre un A majuscule à "app" ci-dessus
     return new $className($this->getDb($nomBase));
   }
 
