@@ -101,6 +101,7 @@ class App
   */
   public function getTable($nameTable, $nomBase, $fromBundle = null)
   {
+    // (Majuscule à App car c'est un namespace)
     if($fromBundle){
       $className = "\\App\\Src\\{$fromBundle}\\Table\\" . ucfirst($nameTable) . "Table"; // ex : App\src\NomBundle\Table\CategoriesTable
     } else {
