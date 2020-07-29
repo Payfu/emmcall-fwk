@@ -108,6 +108,7 @@ class App
     }
     // Instanciation de la classe
     // getDb() doit recevoir le paramètre qui identifie la bonne bdd !
+    // Si cette ligne buggue alors il faut mettre un A majuscule à "app" ci-dessus
     return new $className($this->getDb($nomBase));
   }
 
