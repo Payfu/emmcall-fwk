@@ -12,7 +12,7 @@
 composer require emmcall/emmcall-fwk
 ```
 
-## Unix
+## Unix Install
 Move directories into the root.
 ```
 mv -u vendor/emmcall/emmcall-fwk/* ./
@@ -27,6 +27,18 @@ Remove emmcall directory.
 ```
 rm -rf vendor/emmcall
 ```
+
+## Windows Install
+Move directories into the root.
+```
+xcopy /E /Q vendor\emmcall\emmcall-fwk\* .\
+```
+
+Remove emmcall directory.
+```
+RD /S vendor\emmcall
+```
+
 
 *Time is lacking to explain how it works, sorry !*
 
