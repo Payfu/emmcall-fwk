@@ -55,6 +55,10 @@ if(ENV === 'dev'){
               <select class="form-control" id="listBundle">
               </select>
             </div>
+            <div class="form-group">
+              <select class="form-control" id="listBdd">
+              </select>
+            </div>
             <button type="submit" class="btn btn-primary">Ajouter</button>
           </form>
         </div>
