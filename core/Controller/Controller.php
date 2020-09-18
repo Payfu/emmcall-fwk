@@ -9,103 +9,110 @@ use Core\Router\Routing;
  */
 class Controller
 {
-    /*
-      * Ces variables sont créés dans App\AppController
-      */
-    protected $viewPath;
-    protected $template;
-    protected $templatePath;
-    protected $jsPath;
-    protected $cssPath;
-    protected $_ymlFile = ROOT."/app/Routes/routes.yml";
+  /*
+   * C'est variable son créer dans App\AppController
+   */
+  protected $viewPath;
+  protected $template;
+  protected $templatePath;
+  protected $jsPath;
+  protected $cssPath;
+  protected $_ymlFile = ROOT."/app/Routes/routes.yml";
 
-    protected function render($view, $variables = [])
-    {      
-      $content = '';
-      
-      ob_start();
-
-      // Les variables récupérées ici sont utilisées en aval dans le template
-      extract($variables);
-
-      // On charge le chemin de la page à afficher
-      require ($this->viewPath . str_replace('.', '/', $view) . '.php');
-
+  /*
+   * On applique de la page.
+   * Si $getHtml = false alors il retourne le html de la page afin, par exemple, de l'envoyer par mail. (idée de Guillaume Dauchez)
+   * @view = nom de la vue
+   * @variables = liste des variables initialisées que l'on retrouve dans la vue
+   * @getHtml = booleen
+   */
+  protected function render(string $view, array $variables = [], bool $getHtml = true)
+  {      
+    $content = '';
+    ob_start();
+    // Les variables récupéré ici sont utilisé en aval dans le template
+    extract($variables);
+    // On charge le chemin de la page à afficher
+    require ($this->viewPath . str_replace('.', '/', $view) . '.php');
+    // On affiche la page web sinon on retourne le HTML
+    if($getHtml){
       // La variable $content est envoyée dans le template
       $content = ob_get_clean();
-
       // On charge le template
       require($this->templatePath . 'templates/' . $this->template . '.php'); 
+    } else {
+      $include = ob_get_contents();
+      ob_end_clean();
+      // do whatever you want with $include
+      return $include; 
     }
+  }
     
-    /*
-       * On tape le nom d'une route et il récupère le chemin "path"
-       * @routeName = nom de la route
-       * @$params = tableau des paramètres GET de la route
-       */
-    protected function redirect($routeName, $params = null, bool $redirect=true){
-      $r = new Routing($this->_ymlFile, null);
-      return $r->redirectManager($routeName, $params, $redirect);
-    }
+  /*
+   * On tape le nom d'une route et il récupère le chemin "path"
+   * @routeName = nom de la route
+   * @$params = tableau des paramètres GET de la route
+   */
+  protected function redirect($routeName, $params = null, bool $redirect=true){
+    $r  = new Routing($this->_ymlFile, null);
+    return $r->redirectManager($routeName, $params, $redirect);
+  }
     
-    /*
-       * Appel des scripts JS et CSS en fonction des pages
-       * Avec la syntaxe suivante : $tab = $this->scripts(['upload.css', 'upload.js', 'https://domaine.fr/script.min.js']);
-       */
-    protected function scripts($tab=[])
-    {
+  /*
+   * Appel des scripts JS et CSS en fonction des pages
+   * Avec la syntaxe suivante : $tab = $this->scripts(['upload.css', 'upload.js', 'https://domaine.fr/script.min.js']);
+   */
+  protected function scripts($tab=[])
+  {
       $scripts_js = $scripts_css = '';
       if(!empty($tab))
       {   
-        foreach ($tab as $value) {
-          $sanitize_name = str_replace(' ', '', $value); // On supprime les éventuelles espaces
-          $ext = strtolower(substr(strrchr($sanitize_name, '.'), 1)); // On récupère l'extension sans le point
+          foreach ($tab as $value) {
+              $sanitize_name = str_replace(' ', '', $value); // On supprime les éventuelles espaces
+              $ext = strtolower(substr(strrchr($sanitize_name, '.'), 1)); // On récupère l'extension sans le point
 
-          if(filter_var($sanitize_name, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED))
-          { $url = filter_var($sanitize_name, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED); $type= 'isUrl'; }
-          else{$url = $sanitize_name; $type = 'isNotUrl';}
+              if(filter_var($sanitize_name, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED))
+              { $url = filter_var($sanitize_name, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED); $type= 'isUrl'; }
+              else{$url = $sanitize_name; $type = 'isNotUrl';}
 
-          if    ($ext === 'css' and $type === 'isUrl') { $scripts_css .= "\t".'<link rel="stylesheet" href="'.$url.'">'."\n"; }
-          elseif($ext === 'css' and $type === 'isNotUrl') { $scripts_css .= "\t".'<link rel="stylesheet" href="'.$this->cssPath.$url.'?'.uniqid().'">'."\n"; }
-          elseif( $ext === 'js' and $type === 'isUrl') { $scripts_js .= "\t".'<script src="'.$url.'"></script>'."\n"; }
-          elseif( $ext === 'js' and $type === 'isNotUrl') { $scripts_js .= "\t".'<script src="'.$this->jsPath.$url.'?'.uniqid().'"></script>'."\n"; }
-        }
+              if    ($ext === 'css' and $type === 'isUrl') { $scripts_css .= "\t".'<link rel="stylesheet" href="'.$url.'">'."\n"; }
+              elseif($ext === 'css' and $type === 'isNotUrl') { $scripts_css .= "\t".'<link rel="stylesheet" href="'.$this->cssPath.$url.'?'.uniqid().'">'."\n"; }
+              elseif( $ext === 'js' and $type === 'isUrl') { $scripts_js .= "\t".'<script src="'.$url.'"></script>'."\n"; }
+              elseif( $ext === 'js' and $type === 'isNotUrl') { $scripts_js .= "\t".'<script src="'.$this->jsPath.$url.'?'.uniqid().'"></script>'."\n"; }
+          }
       }
       return compact('scripts_js', 'scripts_css');
-    }
+  }
 
-    /**
-      * Renvoie les bon header en fonction de la situation
-      */
-    protected function forbidden(string $value=null)
-    {
-      // On enregistre $value en session
-      if($value <> null){
-        $_SESSION['SESS_ERROR_403'] = $value;
-      }
-      $url = WEBROOT.'/error403';
-
-      // On redirige vers la route par defaut du controller app/controller/ErrorController.php
-      header('Location:'.$url);
-      exit;
+  /**
+   * Renvoie les bon header en fonction de la situation
+   */
+  protected function forbidden(string $value=null)
+  {
+    // On enregistre $value en session
+    if($value <> null){
+      $_SESSION['SESS_ERROR_403'] = $value;
     }
+    $url = WEBROOT.'/error403';
+    // On redirige vers la route par defaut du controller app/controller/ErrorController.php
+    header('Location:'.$url);
+    exit;
+  }
     
-    /*
-      * Gestion de l'erreur 404
-      */
-    protected function notFound(string $value=null)
-    {
-      // On enregistre $value en session
-      if($value <> null){
-        $_SESSION['SESS_ERROR_404'] = $value;
-      }
-      
-      $url = WEBROOT.'/error404';
-      
-      // On redirige vers la route par defaut du controller app/controller/ErrorController.php
-      header('Location:'.$url);
-      exit;
+  /*
+   * Gestion de l'erreur 404
+   */
+  protected function notFound(string $value=null)
+  {
+    // On enregistre $value en session
+    if($value <> null){
+      $_SESSION['SESS_ERROR_404'] = $value;
     }
+    $url = WEBROOT.'/error404';
+    // On redirige vers la route par defaut du controller app/controller/ErrorController.php
+    header('Location:'.$url);
+    exit;
+  }
     
   /*
    * Cette méthode est appelée depuis un nomTableObj.
@@ -130,10 +137,9 @@ class Controller
   
   /*
    * Cette méthode est appelée depuis un nomTableObj.
-   * En fonction de si c'est un getEntity, createEntity, ou updateEntity on construit pas de la même façons
+   * En fonction de si c'est un getEntity, createEntity, ou updateEntity on ne construit pas de la même façons
    */
-  protected function constructEntity($entity, $action, $fields=false, $exclusions = []){
-    
+  protected function constructEntity($entity, $action, $fields=false, $exclusions=[]){
     $arrCreateEntity = $arrUpdateEntity=[];
     
     foreach($fields as $k => $v){
@@ -148,7 +154,7 @@ class Controller
       if($action === 'createEntity'){
         $prop2 = "__".$v;
           
-        // Les exclusions contiennent les champs auto_incrémentés, par défaut: id
+        // Les exclusions contiennent les champs auto_incrémentés, ex: id.
         if(!in_array($v, $exclusions) ){
           $arrCreateEntity[$v] = $entity->$prop2;
         }
@@ -173,5 +179,16 @@ class Controller
     if($action === 'updateEntity'){
       return $arrUpdateEntity;
     }
+  }
+  
+  /*
+   * Permet d'afficher le contenu d'une variable peut importe sont type.
+   * @stop = false, alors le script ne s'arrête pas
+   */
+  protected function debug($var, bool $stop = true){
+    echo "<pre>";
+    print_r($var);
+    echo "</pre>";
+    if($stop){ exit; }
   }
 }
