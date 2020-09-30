@@ -54,11 +54,10 @@ class YamlParser
     $yamlPhp = new YamlParseFilePhp();
     
     // On récupère le contenu des fichier yml converti en array
+    $tab = [];
     foreach ($importArray as $v) {  
-      
       // Si READ_YAML est true alors l'extension est installée sinon c'est la classe YamlParseFilePhp qui prend le relais
       $tab[] = READ_YAML ? yaml_parse_file($chemin.$v.'.yml') : $yamlPhp->convertYamlToArray($chemin.$v.'.yml');
-      //$tab[] = yaml_parse_file($chemin.$v.'.yml');
     }
     
     // On fusionne tous les tableaux
