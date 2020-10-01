@@ -57,7 +57,7 @@ class TestController extends AppController
     
     
 
-    $data = array_merge($scripts, compact( 'metaTitle', 'metaDescription', 'token'));
+    $data = array_merge($scripts, compact( 'metaTitle', 'metaDescription'));
 
     // On envoi un tableau créé avec compact()
     $this->render('index', $data);
