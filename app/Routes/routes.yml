@@ -3,7 +3,7 @@ index:
     path: /
     defaults: 
         # Controller:Methode
-        _controller: home:index
+        _controller: Home:index
 
 # Route avec bundle
 ## Exemple de route : https://domaine.com/test/username/42
