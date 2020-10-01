@@ -21,4 +21,4 @@ nom_de_ma_route_exemple:
 # Importer un fichier route. On indique le nom du fichier sans le .yml
 # toujours le mettre à la fin.
 import@: 
-   - errors
+    - errors
