@@ -5,7 +5,6 @@ require_once '../DataBase/DataBase.php';
 require_once '../DataBase/TypeDataBase.php';
 
 use Core\Config;
-use Core\Yaml\YamlParseFilePhp;
 /**
  * Description of GetSetController
  * Cette classe permet de créer les getters et setters en fonction de la table qui lui est spécifiée.
@@ -35,20 +34,16 @@ class GetSetController
     ini_set('display_errors', '1');
     define('ROOT', dirname(__FILE__));
     
-    // On charge la classe YamlParseFilePhp
-    $yamlPhp = new YamlParseFilePhp();
+    $c  =  yaml_parse_file(substr(ROOT, 0, -12) . 'config/config.yml')['database'][$ClefDatabase];
     
-    $urlYaml = substr(ROOT, 0, -12) . 'config/config.yml';
-    //$array  =  yaml_parse_file(substr(ROOT, 0, -12) . 'config/config.yml')['database'][$ClefDatabase];
-    $array = READ_YAML ? yaml_parse_file($urlYaml) : $yamlPhp->convertYamlToArray($urlYaml);
-    //$this->_db = new Core\DataBase\TypeDataBase($array);
-    $this->_db = new Core\DataBase\TypeDataBase($array['database'][$ClefDatabase]);
+    //$this->_db = new Core\DataBase\TypeDataBase($c['db_name'],$c['db_user'],$c['db_pass'],$c['db_host'],$c['db_type']);
+    $this->_db = new Core\DataBase\TypeDataBase($c);
     
     $this->_nom_table = $nomTable;
     // NOM_TABLE => NomTable
     $this->_nom_table_format = str_replace(' ', '', ucwords(str_replace('_', " ", strtolower($nomTable))));
-    $this->_nom_base = $array['db_name'];
-    $this->_db_type = $array['db_type'];
+    $this->_nom_base = $c['db_name'];
+    $this->_db_type = $c['db_type'];
     $this->_nom_clef_base = $ClefDatabase;
     
   }
@@ -202,7 +197,6 @@ class GetSetController
     // On crée un tableau avec les champs auto_incrémentés
     $autoIncrement = (count($this->_auto_increment_columns) > 0) ? "['".implode("','", $this->_auto_increment_columns)."']": null;
     
-    
     $this->_create_entity = '
   /*
   * On crée l\'entité une fois que tous les set sont hydratés
@@ -234,6 +228,8 @@ class GetSetController
    * Création de l'update entity
    */
   private function createUpdateEntity(){
+    // On crée un tableau avec les champs auto_incrémentés
+    $autoIncrement = (count($this->_auto_increment_columns) > 0) ? "['".implode("','", $this->_auto_increment_columns)."']": null;
     
     $this->_update_entity = '
   /*
@@ -244,7 +240,7 @@ class GetSetController
     // Si le getEntity n\'est pas lancé
     if(!$this->_selectFields){ return false; }
 
-    return $t->update(["id"=> $this->__id], $this->constructEntity($this, __FUNCTION__, $this->_dataFields), $debug );
+    return $t->update(["id"=> $this->__id], $this->constructEntity($this, __FUNCTION__, $this->_dataFields, '.$autoIncrement.'), $debug );
   }';
   }
   

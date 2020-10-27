@@ -10,8 +10,8 @@ if(ENV === 'dev'){
     $nomFormatBundle = ucfirst(strtolower($_POST['bundleName']));
     
     // Si le Bundle n'existe pas on le crée
-    $dirPath            = "../../app/Src/{$nomFormatBundle}Bundle/Controller";
-    $dirPathView        = "../../app/Src/{$nomFormatBundle}Bundle/Views/";
+    $dirPath            = "../../app/src/{$nomFormatBundle}Bundle/Controller";
+    $dirPathView        = "../../app/src/{$nomFormatBundle}Bundle/Views/";
     $fileController     = $dirPath . "/{$nomFormatBundle}Controller.php";
     $fileControllerDemo = './demo/controllerDemo.txt';
     

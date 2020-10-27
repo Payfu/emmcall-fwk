@@ -9,9 +9,9 @@ use Core\Config;
 if(ENV === 'dev'){
   
   // On récupère le nom de la table et le nom du bundle
-  if(isset($_POST['action']) && $_POST['action'] === 'create' && filter_input(INPUT_POST, 'entityName', FILTER_SANITIZE_FULL_SPECIAL_CHARS) && filter_input(INPUT_POST, 'listBundle', FILTER_SANITIZE_FULL_SPECIAL_CHARS)){
+  if(isset($_POST['action']) && $_POST['action'] === 'create' && filter_input(INPUT_POST, 'entityName', FILTER_SANITIZE_FULL_SPECIAL_CHARS) && filter_input(INPUT_POST, 'listBundle', FILTER_SANITIZE_FULL_SPECIAL_CHARS) && filter_input(INPUT_POST, 'bddName', FILTER_SANITIZE_FULL_SPECIAL_CHARS)){
   
-    $gs = new GetSetController($_POST['entityName']);
+    $gs = new GetSetController($_POST['entityName'], $_POST['bddName']);
     
     if(!$gs->isTableExist()){
       $data = ["type"=>"ko", "msg" => "La table <strong>{$_POST['entityName']}</strong> n'existe pas dans la base de données." ];
@@ -25,10 +25,10 @@ if(ENV === 'dev'){
     $nomBundle = $_POST['listBundle'];
     
     // On verifie que le bundle existe
-    $dirPath        = "../../app/Src/{$nomBundle}";
-    $dirPathEntity  = "../../app/Src/{$nomBundle}/Entity";
-    $dirPathTable   = "../../app/Src/{$nomBundle}/Table";
-    $dirPathObject  = "../../app/Src/{$nomBundle}/Objects";
+    $dirPath        = "../../app/src/{$nomBundle}";
+    $dirPathEntity  = "../../app/src/{$nomBundle}/Entity";
+    $dirPathTable   = "../../app/src/{$nomBundle}/Table";
+    $dirPathObject  = "../../app/src/{$nomBundle}/Objects";
     $fileTable      = $dirPathTable . "/{$nomTableFormat}Table.php";
     $fileEntity     = $dirPathEntity . "/{$nomTableFormat}Entity.php";
     $fileObject     = $dirPathObject . "/{$nomTableFormat}Obj.php";
@@ -66,21 +66,6 @@ if(ENV === 'dev'){
         $valid = false;
       }
       
-      // La partie entity sera à l'avenir remplacée par le contenue de objects
-      // Bref tous les nameObj deviendront nameEntity
-      /*
-      if(is_dir($dirPathEntity)){
-        $newEntity = fopen($fileEntity, 'w+');
-        fwrite($newEntity, $newDemoFileEntity);
-        fclose($newEntity);
-      } elseif(mkdir($dirPathEntity, 0644, true)){        
-        $newEntity = fopen($fileEntity, 'w+');
-        fwrite($newEntity, $newDemoFileEntity);
-        fclose($newEntity);
-      } else {
-        $valid = false;
-      }*/
-      
       if(is_dir($dirPathObject)){
         $newObject = fopen($fileObject, 'w+');
         fwrite($newObject, $newDemoFileObject);
@@ -96,7 +81,6 @@ if(ENV === 'dev'){
       if($valid){
         $data = ["type"=>"ok", "msg" => "L'entité <strong>{$nomTableFormat}</strong> est correctement créée pour le bundle <strong>{$nomBundle}</strong>." ];
       }
-      
     } 
     else {
       $data = ["type"=>"ko", "msg" => "L'entitié <strong>{$nomTableFormat}</strong> existe déjà dans le bundle <strong>{$nomBundle}</strong>." ];
