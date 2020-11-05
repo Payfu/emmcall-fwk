@@ -290,18 +290,18 @@ class Table
     $attr = '';
     if($attributes){ $attr = implode(',',$attributes);}
     
-    // Création du nom du fichier
-    $fn = sha1($statement.",".$attr.",".$one);
-    
-    $filename = ROOT."/core/Table/tmp/".$fn. ".dat";
-    
     // Si on demande de mettre en cache
     if($cache){
+      // Création du nom du fichier
+      $fn = sha1($statement.",".$attr.",".$one);
+      // On place le tout dans un dossier (/date/heure) qui dure 1h
+      $folder = Tools::dateFromString(date("Y-m-d H:i:s"), "+{$cache} second", "Y_m_d/h");
+      $filename = ROOT."/core/Table/tmp/{$folder}/{$fn}.dat";
       
       // Si le fichier existe
       if(file_exists($filename)){
         // Si la date est dépassée alors on enregistre le resultat dans un fichier temporaire
-        // on retourne aussi les données
+        // et on retourne aussi les données
         if (filemtime($filename)<time()-($cache)){
           // Si le dossier tmp n'existe pas on le crée
           $this->createDir($filename);
@@ -331,7 +331,6 @@ class Table
       else {
         // Si le dossier tmp n'existe pas on le crée
         $this->createDir($filename);
-
         // On ouvre le fichier
         $fd = fopen($filename, "w"); // on ouvre le fichier cache
         if ($fd) {
