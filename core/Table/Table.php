@@ -295,9 +295,9 @@ class Table
       // Création du nom du fichier
       $fn = sha1($statement.",".$attr.",".$one);
       // On place le tout dans un dossier (/date/heure) qui dure 1h
-      $folder = Tools::dateFromString(date("Y-m-d H:i:s"), "+{$cache} second", "Y_m_d/h");
+      $folder = Tools::dateFromString(date("Y-m-d H:i:s"), "+{$cache} second", "Y_m_d/H");
       $filename = ROOT."/core/Table/tmp/{$folder}/{$fn}.dat";
-      $olderFolder = Tools::dateFromString(date("Y-m-d H:i:s"), "-1 hour", "Y_m_d/h");
+      $olderFolder = Tools::dateFromString(date("Y-m-d H:i:s"), "-1 hour", "Y_m_d/H");
       $olderFilename = ROOT."/core/Table/tmp/{$olderFolder}/{$fn}.dat";
       
       // Si le fichier existe
