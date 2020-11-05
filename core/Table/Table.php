@@ -297,6 +297,8 @@ class Table
       // On place le tout dans un dossier (/date/heure) qui dure 1h
       $folder = Tools::dateFromString(date("Y-m-d H:i:s"), "+{$cache} second", "Y_m_d/h");
       $filename = ROOT."/core/Table/tmp/{$folder}/{$fn}.dat";
+      $olderFolder = Tools::dateFromString(date("Y-m-d H:i:s"), "-1 hour", "Y_m_d/h");
+      $olderFilename = ROOT."/core/Table/tmp/{$olderFolder}/{$fn}.dat";
       
       // Si le fichier existe
       if(file_exists($filename)){
@@ -312,6 +314,8 @@ class Table
             $contenuCache = serialize( $this->finalQuery($statement, $attributes, $one) );
             fwrite($fd,$contenuCache); // on écrit le contenu du buffer dans le fichier cache
             fclose($fd);
+            // On supprime l'ancien s'il existe
+            if(file_exists($olderFilename)){unlink($olderFilename);}
             // On retourne les data
             return unserialize($contenuCache);
           }
@@ -337,6 +341,9 @@ class Table
           $contenuCache = serialize( $this->finalQuery($statement, $attributes, $one) );
           fwrite($fd,$contenuCache); // on écrit le contenu du buffer dans le fichier cache
           fclose($fd);
+          
+          // On supprime l'ancien s'il existe
+          if(file_exists($olderFilename)){unlink($olderFilename);}
           // On retourne les data
           return unserialize($contenuCache);
         }
