@@ -1,8 +1,11 @@
 <?php
 namespace Core\Table;
 
+#use Core\Yaml\YamlParser;
+//use Core\Router\Router;
 use Core\Tools\Tools;
-
+use Core\Config;
+use Core\Yaml\YamlParseFilePhp;
 /**
  * Description of Cache
  * Permet des actions sur le cache
@@ -10,16 +13,26 @@ use Core\Tools\Tools;
  */
 class Cache
 {
+  private $_rootPath;
   private $_fileName;
   private $_fullPath;
   private $_timeCache;
+  private $_timePurge;
+  private $_sizePurge;
   private $_statement;
   private $_attributes;
   private $_one;
   private $_finalQuery;
   
-  public function __construct() {
-    
+  public function __construct()
+  {
+    // On charge la classe YamlParseFilePhp
+    $yamlPhp = new YamlParseFilePhp();
+    // On récupère le fichier converti en tableau
+    $array = READ_YAML ? yaml_parse_file(ROOT. '/config/config.yml') : $yamlPhp->convertYamlToArray(ROOT. '/config/config.yml');
+    $this->_timePurge = isset($array['cache']) ? $array['cache']['purge'] * 60 : false; // En minute
+    $this->_sizePurge = isset($array['cache']) ? $array['cache']['size'] * 1000 : false;// En Kilo octet
+    $this->_rootPath = ROOT."/core/Table/tmp";
   }
   /*
    * Mise en cache
@@ -29,7 +42,7 @@ class Cache
     $this->initData($data, $finalQuery);
     
     // Si le fichier ($_fileName;) existe quelque part dans l'arbo du dossier core/Table
-    $filename = $this->scanArbo(ROOT."/core/Table");
+    $filename = $this->scanArbo($this->_rootPath);
     
     /*
        *  Le fichier existe on reprend son chemin d'origine
@@ -68,6 +81,10 @@ class Cache
         $contenuCache = serialize( $this->_finalQuery );
         fwrite($fd,$contenuCache); // on écrit le contenu du buffer dans le fichier cache
         fclose($fd);
+        
+        // On purge les fichier obsolètes
+        $this->purge();
+        
         // On retourne les data
         return unserialize($contenuCache);
       }
@@ -120,23 +137,20 @@ class Cache
   }
   
   /*
-   * OBSOLETE !!!!
+   * ATTENTION IMPORTANT : SplFileInfo::getATime() équivalent à la fonction fileatime() peut-être désactivé sur certain système UNIX auxquels cas utiliser filemtime() ou SplFileInfo::getMTime()
    * On purge le dossier core/Table/tmp
-   * Cette méthode facultative doit être appelée via un controller qui lui-même sera appelé via une route
+   * Cette méthode est utilisé que lorsqu'un fichier est créé
    */
-  public function purge(int $validite = 3600 * 24 ){
-    $root = ROOT."/core/Table/tmp";
-    $listFiles = scandir($root);
-    
-    foreach ($listFiles as $filename) {
-      // On ne tient pas compte des chemins '.' et '..'
-      if(!in_array($filename, ['.', '..'])){        
-        // Pour information on convertis le filemtime en date
-        //$date = date ("F d Y H:i:s", filemtime($root.'/'.$filename));
-        
-        // On supprime les fichiers ayant une ancienneté de plus de 24h (par défaut)
-        if(filemtime($root.'/'.$filename)<time() - $validite){
-          unlink($root.'/'.$filename);
+  public function purge(){
+    // On scan l'arboressance
+    $di = new \RecursiveDirectoryIterator($this->_rootPath);
+    foreach (new \RecursiveIteratorIterator($di) as $filename => $file) {
+      // Si c'est un fichier et que son extension est .dat
+      if($file->isFile() && $file->getExtension() == 'dat'){
+        // Les fichier non consultés depuis au moins x minute et qu'il est inférieur à 200ko
+        if ($file->getATime() < time()-($this->_timePurge) && $file->getSize() < $this->_sizePurge ){
+          //$this->debug(date("Y-m-d H:i:s",$file->getATime()), false);
+          unlink($filename);
         }
       }
     }
