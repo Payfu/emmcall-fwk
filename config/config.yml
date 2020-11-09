@@ -40,3 +40,10 @@ database:
         db_port: NULL
         db_name: NULL
         db_host: NULL
+        
+# Gestion du cache
+cache:
+    # Combien de temps (en minute) un fichier n'a pas été consulté avant de le purger
+    purge: 60
+    # Taille minimale en Ko pour concerver les fichiers en dessous on supprime
+    size: 200
