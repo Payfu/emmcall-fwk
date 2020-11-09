@@ -4,8 +4,7 @@ namespace Core\Table;
 /**
  * On appelle pour le constructeur la connexion à la base de données se trouvant dans Core
  */
-use Core\DataBase\DataBase; 
-
+use Core\DataBase\DataBase;
 
 /**
  * Description of Table
@@ -127,9 +126,9 @@ class Table
   /*
    * Delete
    */
-  public function delete($id)
+  public function delete($id, string $nomColonne = 'id')
   {
-    return $this->query("DELETE FROM {$this->table} WHERE id = ? ", [$id], true );
+    return $this->query("DELETE FROM {$this->table} WHERE {$nomColonne} = ? ", [$id], true );
   }
     
   /*
@@ -280,74 +279,16 @@ class Table
   }
   
   /**
-   * On appel les requêtes dans les classes du dossier Entity (il suffit de changer le nom de la class ex: PostTable -> PostEntity)
+   * On appelle les requêtes dans les classes du dossier Obj (il suffit de changer le nom de la class ex: PostTable -> PostObj)
    * La requête est préparée quand il y a des attribues
    * @cache = (temps de la mise en cache en seconde)
    */
-  public function query(string $statement, $attributes = null, $one = false, string $cache = null)
+  public function query(string $statement, $attributes = null, $one = false, string $timeCache = null)
   {
-    // On transforme le tableau $attributes en string
-    $attr = '';
-    if($attributes){ $attr = implode(',',$attributes);}
-    
     // Si on demande de mettre en cache
-    if($cache){
-      // Création du nom du fichier
-      $fn = sha1($statement.",".$attr.",".$one);
-      // On place le tout dans un dossier (/date/heure) qui dure 1h
-      $folder = Tools::dateFromString(date("Y-m-d H:i:s"), "+{$cache} second", "Y_m_d/H");
-      $filename = ROOT."/core/Table/tmp/{$folder}/{$fn}.dat";
-      $olderFolder = Tools::dateFromString(date("Y-m-d H:i:s"), "-1 hour", "Y_m_d/H");
-      $olderFilename = ROOT."/core/Table/tmp/{$olderFolder}/{$fn}.dat";
-      
-      // Si le fichier existe
-      if(file_exists($filename)){
-        // Si la date est dépassée alors on enregistre le resultat dans un fichier temporaire
-        // et on retourne aussi les données
-        if (filemtime($filename)<time()-($cache)){
-          // Si le dossier tmp n'existe pas on le crée
-          $this->createDir($filename);
-          
-          // On ouvre le fichier
-          $fd = fopen($filename, "w"); // on ouvre le fichier cache
-          if ($fd) {
-            $contenuCache = serialize( $this->finalQuery($statement, $attributes, $one) );
-            fwrite($fd,$contenuCache); // on écrit le contenu du buffer dans le fichier cache
-            fclose($fd);
-            // On supprime l'ancien s'il existe
-            if(file_exists($olderFilename)){unlink($olderFilename);}
-            // On retourne les data
-            return unserialize($contenuCache);
-          }
-        }
-        // La date n'est pas dépassée
-        else {
-          // Les données existe dans le cache on les retourne
-          $f = fopen($filename, "rb");
-          $v = fread($f, filesize($filename));
-          return unserialize($v); // affichage du contenu du fichier
-        }
-      }
-      
-      /*
-          *  le fichier n'existe pas on le crée
-          */
-      else {
-        // Si le dossier tmp n'existe pas on le crée
-        $this->createDir($filename);
-        // On ouvre le fichier
-        $fd = fopen($filename, "w"); // on ouvre le fichier cache
-        if ($fd) {
-          $contenuCache = serialize( $this->finalQuery($statement, $attributes, $one) );
-          fwrite($fd,$contenuCache); // on écrit le contenu du buffer dans le fichier cache
-          fclose($fd);
-          
-          // On supprime l'ancien s'il existe
-          if(file_exists($olderFilename)){unlink($olderFilename);}
-          // On retourne les data
-          return unserialize($contenuCache);
-        }
-      }
+    if($timeCache){
+      $cache = new Cache();
+      return $cache->addCache(compact("timeCache","statement","attributes","one"), $this->finalQuery($statement, $attributes, $one) );
     } 
     /*
        * Pas de mise en cache on retourne les données
@@ -368,14 +309,6 @@ class Table
     } else {
       return $this->db->query($statement, null, $one);
     }
-  }
-  
-  /*
-   * Création du dossier
-   */
-  private function createDir($filename){
-    $dirname = dirname($filename);
-    if (!is_dir($dirname)){ mkdir($dirname, 0755, true); }
   }
   
   /*
