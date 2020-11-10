@@ -1,8 +1,6 @@
 <?php
 namespace Core\Table;
 
-#use Core\Yaml\YamlParser;
-//use Core\Router\Router;
 use Core\Tools\Tools;
 use Core\Config;
 use Core\Yaml\YamlParseFilePhp;
@@ -32,7 +30,7 @@ class Cache
     $array = READ_YAML ? yaml_parse_file(ROOT. '/config/config.yml') : $yamlPhp->convertYamlToArray(ROOT. '/config/config.yml');
     $this->_timePurge = isset($array['cache']) ? $array['cache']['purge'] * 60 : false; // En minute
     $this->_sizePurge = isset($array['cache']) ? $array['cache']['size'] * 1000 : false;// En Kilo octet
-    $this->_rootPath = ROOT."/core/Table/tmp";
+    $this->_rootPath = ROOT."/core/Table";
   }
   /*
    * Mise en cache
@@ -44,17 +42,15 @@ class Cache
     // Si le fichier ($_fileName;) existe quelque part dans l'arbo du dossier core/Table
     $filename = $this->scanArbo($this->_rootPath);
     
-    /*
-       *  Le fichier existe on reprend son chemin d'origine
-       *  Si le fichier est expiré, on le crée à nouveau au même endroit
-       */
+    
+    // Le fichier existe on reprend son chemin d'origine
+    // Si le fichier est expiré, on le crée à nouveau au même endroit  
     if($filename){
       // Si la date est dépassée alors on met à jour le fichier temporaire
       // et on retourne aussi les données
       if (filemtime($filename)<time()-($this->_timeCache)){
-        
-        // On ouvre le fichier
-        $fd = fopen($filename, "w"); // on ouvre le fichier cache
+        // On ouvre le fichier cache
+        $fd = fopen($filename, "w");
         if ($fd) {
           $contenuCache = serialize( $this->_finalQuery );
           fwrite($fd,$contenuCache); // on écrit le contenu du buffer dans le fichier cache
@@ -62,16 +58,15 @@ class Cache
           // On retourne les data
           return unserialize($contenuCache);
         }
-      }else{
-        // Les données existe dans le cache on les retourne
+      }
+      // Les données existe dans le cache on les retourne
+      else{
         $f = fopen($filename, "rb");
         $v = fread($f, filesize($filename));
         return unserialize($v); // affichage du contenu du fichier
       }
     }
-    /*
-       *  le fichier n'existe pas on le crée
-       */
+    //  le fichier n'existe pas on le crée
     else {
       // Si le dossier tmp/{dateHeure}/{file}.dat n'existe pas on le crée
       $this->createDir($this->_fullPath);
@@ -81,10 +76,8 @@ class Cache
         $contenuCache = serialize( $this->_finalQuery );
         fwrite($fd,$contenuCache); // on écrit le contenu du buffer dans le fichier cache
         fclose($fd);
-        
-        // On purge les fichier obsolètes
+        // On purge les fichiers obsolètes
         $this->purge();
-        
         // On retourne les data
         return unserialize($contenuCache);
       }
@@ -142,15 +135,18 @@ class Cache
    * Cette méthode est utilisé que lorsqu'un fichier est créé
    */
   public function purge(){
-    // On scan l'arboressance
-    $di = new \RecursiveDirectoryIterator($this->_rootPath);
-    foreach (new \RecursiveIteratorIterator($di) as $filename => $file) {
-      // Si c'est un fichier et que son extension est .dat
-      if($file->isFile() && $file->getExtension() == 'dat'){
-        // Les fichier non consultés depuis au moins x minute et qu'il est inférieur à 200ko
-        if ($file->getATime() < time()-($this->_timePurge) && $file->getSize() < $this->_sizePurge ){
-          //$this->debug(date("Y-m-d H:i:s",$file->getATime()), false);
-          unlink($filename);
+    // Si _timePurge et différent de false
+    if($this->_timePurge && is_int($this->_timePurge)){
+      // On scan l'arboressance
+      $di = new \RecursiveDirectoryIterator($this->_rootPath);
+      foreach (new \RecursiveIteratorIterator($di) as $filename => $file) {
+        // Si c'est un fichier et que son extension est .dat
+        if($file->isFile() && $file->getExtension() == 'dat'){
+          // Les fichier non consultés depuis au moins x minute et qu'il est inférieur à 200ko
+          if ($file->getATime() < time()-($this->_timePurge) && $file->getSize() < $this->_sizePurge ){
+            //On garde cette ligne -> $this->debug(date("Y-m-d H:i:s",$file->getATime()), false);
+            unlink($filename);
+          }
         }
       }
     }
