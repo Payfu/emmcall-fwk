@@ -17,6 +17,7 @@ class Cache
   private $_timeCache;
   private $_timePurge;
   private $_sizePurge;
+  private $_timePurgeFinal;
   private $_statement;
   private $_attributes;
   private $_one;
@@ -30,6 +31,7 @@ class Cache
     $array = READ_YAML ? yaml_parse_file(ROOT. '/config/config.yml') : $yamlPhp->convertYamlToArray(ROOT. '/config/config.yml');
     $this->_timePurge = isset($array['cache']) ? $array['cache']['purge'] * 60 : false; // En minute
     $this->_sizePurge = isset($array['cache']) ? $array['cache']['size'] * 1000 : false;// En Kilo octet
+    $this->_timePurgeFinal = isset($array['cache']) ? $array['cache']['purgeFinal'] * 3600 : false;// En heure
     $this->_rootPath = ROOT."/core/Table";
   }
   /*
@@ -41,7 +43,6 @@ class Cache
     
     // Si le fichier ($_fileName;) existe quelque part dans l'arbo du dossier core/Table
     $filename = $this->scanArbo($this->_rootPath);
-    
     
     // Le fichier existe on reprend son chemin d'origine
     // Si le fichier est expiré, on le crée à nouveau au même endroit  
@@ -76,8 +77,9 @@ class Cache
         $contenuCache = serialize( $this->_finalQuery );
         fwrite($fd,$contenuCache); // on écrit le contenu du buffer dans le fichier cache
         fclose($fd);
-        // On purge les fichiers obsolètes
+        // On purge les fichiers obsolètes et on supprime les dossiers vides
         $this->purge();
+        $this->removeDirectories();
         // On retourne les data
         return unserialize($contenuCache);
       }
@@ -134,7 +136,7 @@ class Cache
    * On purge le dossier core/Table/tmp
    * Cette méthode est utilisé que lorsqu'un fichier est créé
    */
-  public function purge(){
+  private function purge(){
     // Si _timePurge et différent de false
     if($this->_timePurge && is_int($this->_timePurge)){
       // On scan l'arboressance
@@ -142,12 +144,42 @@ class Cache
       foreach (new \RecursiveIteratorIterator($di) as $filename => $file) {
         // Si c'est un fichier et que son extension est .dat
         if($file->isFile() && $file->getExtension() == 'dat'){
-          // Les fichier non consultés depuis au moins x minute et qu'il est inférieur à 200ko
+          // Les fichiers non consultés depuis au moins x minute et inférieur à xko
           if ($file->getATime() < time()-($this->_timePurge) && $file->getSize() < $this->_sizePurge ){
             //On garde cette ligne -> $this->debug(date("Y-m-d H:i:s",$file->getATime()), false);
             unlink($filename);
           }
+          // Sinon passer un certain temps on supprime le reste qu'importe la taille 
+          // on en profite aussi pour effacer les dossiers vides
+          else if($file->getATime() < time()-($this->_timePurgeFinal)){
+                unlink($filename);  
+          }
         }
+      }
+    }
+  }
+  
+  /*
+   * Suppression des dossiers vides 
+   * Pour eviter de surcharger php je pense qu'il est préférable que cette procédure ne ce lance qu'à des moments bien précis ex: 10h
+   */
+  private function removeDirectories(){
+    if(date("H") === '10'){
+      // Liste des dossiers à supprimer
+      $listDirectoryToDelete = [];
+      // On récupère la liste des dossiers en ignorant les \. et \..
+      $di = new \RecursiveDirectoryIterator($this->_rootPath, \FilesystemIterator::SKIP_DOTS);
+      // On récupère également le chemin de base contenant les fichiers
+      foreach (new \RecursiveIteratorIterator($di, \RecursiveIteratorIterator::SELF_FIRST ) as $filename => $file) {
+        if($file->isDir()){
+          // Si le dossier est vide alors on l'ajoute d'un dans tableau pour le supprimer plus bas, on ne peut pas le supprimer dans la foulée car RecursiveIteratorIterator n'apprécie pas.
+          $isEmpty = empty(array_diff(scandir($filename), array('..', '.')));
+          if($isEmpty){ $listDirectoryToDelete[] = $file->getPathname(); } 
+        }
+      }
+      // On supprime les dossiers vide;
+      foreach ($listDirectoryToDelete as $dir) {
+        rmdir($dir);
       }
     }
   }
