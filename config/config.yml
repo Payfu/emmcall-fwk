@@ -43,8 +43,10 @@ database:
         
 # Gestion du cache
 cache:
-    # Combien de temps (en minute) un fichier n'a pas été consulté avant de le purger
+    # Combien de temps (en MINUTE !!!) un fichier n'a pas été consulté avant de le purger
     # false pour désactiver la fonction de purge
-    purge: 3600
+    purge: 60
     # Taille minimale en Ko des fichiers à conserver en dessous de cette limite on les supprime
-    size: 200
+    size: 20
+    # Temps (en HEURE !!!) pendant lequel on conserve les fichiers les plus gros avant de les supprimer à leur tour.
+    purgeFinal: 48
