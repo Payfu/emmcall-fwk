@@ -261,7 +261,7 @@ class Tools
    */
   public static function encodeStr($str = false) : string {  
   
-    if(!$str){ exit("Veuillez indiquer une chaîne à encoder"); }
+    if(!isset($str) && !$str){ exit("Veuillez indiquer une chaîne à encoder"); }
  
     // On encode la chaine base 64
     //$base64 = base64_encode( $this->generate(5).$str.$this->generate(5) );
