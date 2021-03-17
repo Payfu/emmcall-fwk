@@ -1,0 +1,19 @@
+# Route sans bundle
+index:
+    path: /
+    defaults: 
+        # Controller:Methode
+        _controller: Home:Home:index
+
+# Route avec bundle
+## Exemple de route : https://domaine.com/test/username/42
+nom_de_ma_route_exemple:
+    path: /test/{username}/{id}
+    defaults: 
+        # Bundle:Controller:Methode
+        _controller: Home:Home:index
+    requirements:
+        username: "[a-zA-Z0-9_-]{2,150}"
+        id: "[0-9]{2}"
+        # option facultative, GET par défaut
+        _method:  GET
