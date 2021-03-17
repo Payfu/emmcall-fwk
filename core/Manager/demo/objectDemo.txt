@@ -1,0 +1,13 @@
+<?php
+namespace App\Entities\Objects;
+
+use Core\Controller\DbController;
+/**
+ * Description of %objectName%Obj
+ * Liste des getters et setters
+ * @author Emmanuel CALLEC
+ */
+class %objectName%Obj extends DbController
+{
+  %gettersSetters%
+}

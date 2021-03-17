@@ -1,0 +1,13 @@
+<?php
+namespace App\Entities\Tables;
+
+use Core\Table\Table;
+
+/**
+ *
+ * @author Emmanuel CALLEC
+ */
+class %tableName%Table extends Table
+{
+    protected $table = "%tableNameUnformat%";
+}
