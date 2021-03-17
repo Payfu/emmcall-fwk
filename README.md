@@ -36,7 +36,7 @@ xcopy /E /Q vendor\emmcall\emmcall-fwk\* .\
 
 Remove emmcall directory.
 ```
-RD /S vendor\emmcall
+rmdir vendor\emmcall
 ```
 
 
