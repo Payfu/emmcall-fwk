@@ -1,0 +1,57 @@
+### IMPORTANT ###
+# Pour ajouter une nouvelle clef et sa valeur il faut la déclarer dans core\App\App.php
+meta:
+    title: EmmCall Framework
+    description: Description du site
+    author: Emmanuel CALLEC
+    lang: fr
+    copyright: ©xxxx
+        
+dimholt:
+    dmlt_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    dmlt_url: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        
+contact:
+    contact_from: contact@domaine.com
+    contact_objet: Message en provenance du site Name
+
+#database:
+    # Indiquer les clefs en minuscule
+    # nom de la clef en minuscule et sans espace
+    #db1:
+        #db_type: sqlsrv/mysql
+        #db_user: NULL
+        #db_pass: NULL
+        #db_name: NULL
+        #db_host: NULL
+    
+    #db2:
+        #db_type: sqlsrv/mysql
+        #db_user: NULL
+        #db_pass: NULL
+        #db_name: NULL
+        #db_host: NULL
+    
+    # Paramètres pour de l'HYPERFILE SQL
+    #db3:
+        #db_type: HFSQL
+        #db_prov: NULL
+        #db_user: NULL
+        #db_port: NULL
+        #db_name: NULL
+        #db_host: NULL
+        
+# Gestion du cache
+cache:
+    # Combien de temps (en MINUTE !!!) un fichier n'a pas été consulté avant de le purger
+    # false pour désactiver la fonction de purge
+    purge: 60
+    # Taille minimale en Ko des fichiers à conserver en dessous de cette limite on les supprime
+    size: 20
+    # Temps (en HEURE !!!) pendant lequel on conserve les fichiers les plus gros avant de les supprimer à leur tour.
+    purgeFinal: 48
+    
+# Activation des logs SQL (no/yes)
+logsql:
+    Errors: no
+    Success: no
