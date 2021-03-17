@@ -1,0 +1,24 @@
+# Interdit Apache de mettre un .html ou .php au bout d'un \index
+Options -Multiviews
+# Le serveur doit suivre les liens symboliques :
+Options +FollowSymlinks
+# Activation du mod rewrite d'Apache 
+RewriteEngine On
+
+# gestion des images avec et sans bundle
+RewriteRule ^picture/([a-zA-Z0-9]+)/([a-zA-Z_\-0-9/]+).(jpg|png|gif|svg)$    App/Src/$1Bundle/Public/img/$2.$3 [L]
+RewriteRule ^picture/([a-zA-Z_\-0-9/]+).(jpg|png|gif|svg)$    App/Templates/Public/img/$1.$2 [L]
+# gestion du favicon
+RewriteRule ^icons/([a-zA-Z_\-0-9/]+).(jpg|png|gif|svg)$    App/Templates/Public/favicon/$1.$2 [L]
+# gestion des scripts js, css... avec et sans bundle
+RewriteRule ^scripts/([a-zA-Z0-9]+)/(js|css)/([a-zA-Z_\-0-9=\./]+).(js|css)$ App/Src/$1Bundle/Public/$2/$3.$4 [L]
+RewriteRule ^scripts/(js|css)/([a-zA-Z_\-0-9=\./]+).(js|css)$ App/Templates/Public/$1/$2.$3 [L]
+# gestion de fonts
+RewriteRule ^scripts/(fonts)/([a-zA-Z_\-0-9=\./]+).(eot|svg|ttf|woff)$   App/Templates/Public/$1/$2.$3 [L]
+
+# Empêche Apache d'accéder à un dossier (-d) ou fichier (-f) existant sur le serveur
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Règle pour le routeur
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,END]
