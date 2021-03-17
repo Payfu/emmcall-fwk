@@ -13,6 +13,7 @@
     "minimum-stability": "beta",
     "require": {
         "php": ">=8.0",
-        "twbs/bootstrap": ">=4.0"
+        "twbs/bootstrap": ">=4.0",
+        "newerton/yii2-fancybox": ">=1.0",
     }
 }
