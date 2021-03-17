@@ -1,0 +1,51 @@
+{
+  "name": "D'Clic, déjeuner en un clic.",
+  "prefer_related_applications": false,
+  "short_name": "D'Clic",
+  "icons": [
+    {
+      "src": "icons/favicon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/favicon-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/favicon-152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/favicon-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/favicon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/favicon-1920.png",
+      "sizes": "1920x1920",
+      "type": "image/png"
+    }],
+  "start_url": "/",
+  "scope": "/",
+  "display": "fullscreen",
+  "background_color": "#fff",
+  "theme_color": "#714398"
+}

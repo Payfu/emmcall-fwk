@@ -1,0 +1,31 @@
+# Fichier servant à Google Cloud Platform
+runtime: php8
+service: EmmCall
+
+handlers:
+- url: /picture/([a-zA-Z0-9]+)/([a-zA-Z_\-0-9/]+).(jpg|png|gif|svg)$
+  static_files: App/Src/\1Bundle/Public/img/\2.\3
+  upload: App/Src/([a-zA-Z0-9]+)Bundle/Public/img/([a-zA-Z_\-0-9/]+).(jpg|png|gif|svg)$
+  
+- url: /picture/([a-zA-Z_\-0-9/]+).(jpg|png|gif|svg)$
+  static_files: App/Templates/Public/img/\1.\2
+  upload: App/Templates/Public/img/([a-zA-Z\-0-9/]+).(jpg|png|gif|svg)$
+
+- url: /icons/([a-zA-Z_\-0-9/]+).(jpg|png|gif|svg)$
+  static_files: App/Templates/Public/favicon/\1.\2
+  upload: App/Templates/Public/favicon/([a-zA-Z\-0-9/]+).(jpg|png|gif|svg)$
+  
+- url: /scripts/([a-zA-Z0-9]+)/(js|css)/([a-zA-Z_\-0-9=\./]+).(js|css)$
+  static_files: App/Src/\1Bundle/Public/\2/\3.\4
+  upload: App/Src/([a-zA-Z0-9]+)Bundle/Public/(js|css|typo)/([a-zA-Z_\-0-9=\./]+).(js|css)$
+  
+- url: /scripts/(js|css)/([a-zA-Z_\-0-9=\./]+).(js|css)$
+  static_files: App/Templates/Public/\1/\2.\3
+  upload: App/Templates/Public/(js|css|typo)/([a-zA-Z_\-0-9=\./]+).(js|css)$
+  
+- url: /scripts/(fonts)/([a-zA-Z_\-0-9=\./]+).(eot|svg|ttf|woff)$
+  static_files: App/Templates/Public/\1/\2.\3
+  upload: App/Templates/Public/(fonts)/([a-zA-Z_\-0-9=\./]+).(eot|svg|ttf|woff)$
+  
+- url: /.*
+  script: auto
