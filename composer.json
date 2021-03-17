@@ -12,11 +12,6 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=8.0",
-        "twbs/bootstrap": "^5.0",
-        "datatables/datatables": "^1.0",
-        "newerton/yii2-fancybox": "^1.0",
-        "yidas/yii2-jquery": "^2.0",
-        "phpmailer/phpmailer": "^6.0"
+        "php": ">=8.0"
     }
 }
