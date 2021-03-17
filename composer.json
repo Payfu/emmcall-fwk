@@ -10,9 +10,9 @@
             "email": "payfucallback@gmail.com"
         }
     ],
-    "minimum-stability": "alpha",
+    "minimum-stability": "beta",
     "require": {
         "php": ">=8.0",
-        "twbs/bootstrap": "^5.0"
+        "twbs/bootstrap": "^4.0"
     }
 }
