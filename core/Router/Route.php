@@ -100,15 +100,7 @@ class Route
       }else{
         die("<p>La classe suivante n'a pas été trouvée : <pre>{$controller}</pre></p>");
       }
-    }
-    // On appel la fonction qui se trouve dans la route, ex : $router->get('/post', function(){  echo 'tous les articles'; });
-    // Et on passe en paramètre l'ensemble des correspondances du tableau $matches
-    // Encore utile ? Manu
-    else {
-      exit("Voir Router/Route.php Ligne:110");
-      //return call_user_func_array($this->callable, $this->matches);
-    }
-    
+    }    
   }
   
   public function getUrl($params){
