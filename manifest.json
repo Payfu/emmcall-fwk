@@ -1,7 +1,7 @@
 {
-  "name": "D'Clic, déjeuner en un clic.",
+  "name": "EmmCall Framework",
   "prefer_related_applications": false,
-  "short_name": "D'Clic",
+  "short_name": "EmmCall",
   "icons": [
     {
       "src": "icons/favicon-128.png",
