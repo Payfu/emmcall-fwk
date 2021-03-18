@@ -7,7 +7,11 @@ require_once './Autoloader.php';
 //use Core\Config;
 
 if(ENV === 'dev'){
-  
+  function createFolder($pathFolder){
+    if (!file_exists($pathFolder)) {
+      mkdir($pathFolder, 0644, true);
+    }
+  }
   // On récupère le nom de la table et le nom du bundle
   if(
     isset($_POST['action']) 
@@ -37,7 +41,9 @@ if(ENV === 'dev'){
     $fileTableDemo  = './demo/tableDemo.txt';
     $fileObjectDemo = './demo/objectDemo.txt';
     
-    // Si le bundle existe mais pas les dossier Entity et Table
+    createFolder($dirPath);
+    
+    // Si le bundle existe mais pas les dossier Objects et Tables
     if(is_dir($dirPath) && !is_file($fileTable) && !is_file($fileObject)){
       
       $valid = true;
@@ -85,5 +91,5 @@ if(ENV === 'dev'){
       $data = ["type"=>"ko", "msg" => "L'entitié <strong>{$nomTableFormat}</strong> existe déjà." ];
     }    
     echo json_encode($data);
-  } 
+  }  
 }
