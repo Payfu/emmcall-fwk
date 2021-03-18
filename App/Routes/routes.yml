@@ -2,7 +2,7 @@
 index:
     path: /
     defaults: 
-        # Controller:Methode
+        # Bundle:Controller:Methode
         _controller: Home:Home:index
 
 # Route avec bundle
