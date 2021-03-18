@@ -39,6 +39,22 @@ Remove emmcall directory.
 rmdir vendor\emmcall
 ```
 
+## CSS Preprocessors
+To use Bootstrap SCSS
+```
+xcopy /E /Q vendor\twbs\bootstrap\scss\* .\App\Templates\Public\scss
+```
+Preprocessors config
+```
+Input Folder
+App\Templates\Public\scss
+
+Output Folder
+App\Templates\Public\css\bootstrap
+
+Compiler Options
+--style compressed --sourcemap=none
+```
 
 *Time is lacking to explain how it works, sorry !*
 
