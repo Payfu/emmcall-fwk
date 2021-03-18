@@ -3,7 +3,6 @@ namespace App\Src\HomeBundle\Controller;
 
 use App;
 use Core\App\Vue;
-use Core\Tools\Tools;
 
 /**
  * Description of HomeController
