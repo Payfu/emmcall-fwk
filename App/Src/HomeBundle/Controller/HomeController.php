@@ -15,7 +15,7 @@ class HomeController extends App
     * La méthode static Vue gère la partie HTML, 
     * $username, $id sont des valeurs envoyées en GET 
     */
-  public function index($username, $id){
+  public function index(/*$username, $id*/){
     // Appel à une entité, les entités se créent depuis le manager
     // $t = new App\Entities\Objects\EntityNameObj();
     // $res = $t->getEntities(["id"=>1], ["select"=>"id"]);
