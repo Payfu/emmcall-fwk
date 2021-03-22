@@ -13,7 +13,6 @@ use core\Controller\TableController;
  */
 class Table extends TableController
 {
-  protected $_table;
   protected $_db;
 
   /**
@@ -46,7 +45,7 @@ class Table extends TableController
     // implode = 'champ1 = ?, champ2 = ?'
     $attr_part = implode(' AND ', $attr_part);
 
-    $sql = "SELECT {$select} FROM {$this->_table} WHERE {$attr_part} ";
+    $sql = "SELECT {$select} FROM {$this->table} WHERE {$attr_part} ";
 
     return $this->query($sql, $attributes, true, $cache, $debug );
   }
@@ -63,7 +62,7 @@ class Table extends TableController
     $field = $tab[$functionKey];
     $function = strtoupper($functionKey)."(".$field.")"; // ex : MAX(id)
 
-    return $this->query("SELECT {$function} FROM {$this->_table} WHERE {$field} != ''", "", true ); // True : retourne un seul enregistrement
+    return $this->query("SELECT {$function} FROM {$this->table} WHERE {$field} != ''", "", true ); // True : retourne un seul enregistrement
   }*/
     
   /*
@@ -88,7 +87,7 @@ class Table extends TableController
     $sql_part = implode(', ', $sql_parts);
     $attr_part = implode(' AND ', $attr_part);
     
-    $sql = "UPDATE {$this->_table} SET {$sql_part} WHERE {$attr_part} ";
+    $sql = "UPDATE {$this->table} SET {$sql_part} WHERE {$attr_part} ";
     
     return $this->query($sql, $attributes, true, $debug);
   }
@@ -97,7 +96,7 @@ class Table extends TableController
    * Delete
    */
   public function delete($id, string $nomColonne = 'id', $debug = false){
-    return $this->query("DELETE FROM {$this->_table} WHERE {$nomColonne} = ? ", [$id], true, $debug );
+    return $this->query("DELETE FROM {$this->table} WHERE {$nomColonne} = ? ", [$id], true, $debug );
   }
     
   /*
@@ -112,7 +111,7 @@ class Table extends TableController
 
     $attr_part = implode(' AND ', $attr_part);
 
-    $sql = "DELETE FROM {$this->_table} WHERE {$attr_part} ";
+    $sql = "DELETE FROM {$this->table} WHERE {$attr_part} ";
 
     return $this->query($sql, $attributes, true, $debug);
   }
@@ -135,7 +134,7 @@ class Table extends TableController
     $sql_part = implode(', ', $sql_parts);
     $prepa = implode(', ', $prepa);
 
-    $sql = "INSERT INTO {$this->_table} ({$sql_part}) VALUES ({$prepa}) ";
+    $sql = "INSERT INTO {$this->table} ({$sql_part}) VALUES ({$prepa}) ";
 
     return $this->query($sql, $attributes, true, $debug);
   }
@@ -202,8 +201,7 @@ class Table extends TableController
       }
     }
     
-    $sql = "SELECT {$top} {$select} FROM {$this->_table} {$sql_where} {$order} {$limit}";
-    
+    $sql = "SELECT {$top} {$select} FROM {$this->table} {$sql_where} {$order} {$limit}";
     return $this->query($sql, $attributes, null, $cache, $debug);
   }
   
