@@ -33,7 +33,6 @@ class GetSetController
     ini_set('display_errors', '1');
     
     $c  =  yaml_parse_file(substr(ROOT, 0, -12) . 'config/config.yml')['database'][$ClefDatabase];
-    
     //$this->_db = new Core\DataBase\TypeDataBase($c['db_name'],$c['db_user'],$c['db_pass'],$c['db_host'],$c['db_type']);
     $this->_db = new TypeDataBase($c);
     $this->_nom_table = $nomTable;
@@ -45,13 +44,20 @@ class GetSetController
     
   }
   
+  private function debug($str, $stop = true){
+    echo "<pre>";
+    print_r($str);
+    echo "</pre>";
+    if($stop){ exit; }
+  }
   /*
    * On vérifie que la table existe bien.
    */
   public function isTableExist(){
     // Si c'est un sqlsrv le nom de la base est sur table_catalog sinon c'est table_schema 
     $db_type = ($this->_db_type == 'sqlsrv') ? 'table_catalog' : 'table_schema';
-    $res = $this->_db->query("SELECT * FROM information_schema.tables WHERE {$db_type} = '{$this->_nom_base}' AND table_name = '{$this->_nom_table}' ");
+    $sql = "SELECT * FROM information_schema.tables WHERE {$db_type} = '{$this->_nom_base}' AND table_name = '{$this->_nom_table}' ";
+    $res = $this->_db->query($sql);
     return (count($res) != 0) ? true : false;
   }
   
@@ -82,6 +88,7 @@ class GetSetController
    * On check si le champ passé en paramètre est un champ auto_incrémenté
    */
   private function isAutoIncrement(string $fieldName){
+    
     $db_type = ($this->_db_type == 'sqlsrv') ? 'TABLE_CATALOG' : 'TABLE_SCHEMA';
     $sql = ($this->_db_type == 'sqlsrv') 
       ? "SELECT is_identity FROM sys.columns WHERE object_id = object_id('{$this->_nom_base}.dbo.{$this->_nom_table}') AND name = '{$fieldName}'" 
@@ -191,8 +198,6 @@ class GetSetController
    */
   private function createCreateEntity(){
     // On crée un tableau avec les champs auto_incrémentés
-    //$autoIncrement = (count($this->_auto_increment_columns) > 0) ? "['".implode("','", $this->_auto_increment_columns)."']": null;
-    // Cette modification est à l'essai
     $autoIncrement = (count($this->_auto_increment_columns) > 0) ? "['".implode("','", $this->_auto_increment_columns)."']": "[]";
     
     $this->_create_entity = '
@@ -212,11 +217,13 @@ class GetSetController
    * Création du getEntities
    */
   private function createGetEntities(){
+    $autoIncrement = (count($this->_auto_increment_columns) > 0) ? '["order"=>"'.implode(", ", $this->_auto_increment_columns).' ASC"]' : "[]";
+    
     $this->_get_entities = '
   /*
   * On récupère toutes les entités
   */
-  public function getEntities(array $where = null, array $cond = ["order"=>"id ASC"], $debug = false){
+  public function getEntities(array $where = null, array $cond = '.$autoIncrement.', $debug = false){
     $t = $this->'.$this->_nom_table_format.';
     return $t->all($where,$cond,$debug);
   }';
@@ -227,8 +234,6 @@ class GetSetController
    */
   private function createUpdateEntity(){
     // On crée un tableau avec les champs auto_incrémentés
-    // $autoIncrement = (count($this->_auto_increment_columns) > 0) ? "['".implode("','", $this->_auto_increment_columns)."']": null;
-    // Cette modification est à l'essai
     $autoIncrement = (count($this->_auto_increment_columns) > 0) ? "['".implode("','", $this->_auto_increment_columns)."']": "[]";
     
     $this->_update_entity = '
