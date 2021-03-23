@@ -1,6 +1,6 @@
 <?php
 namespace core\Tools;
-
+use core\Password\Password;
 /**
  * Fonctions diverses et utiles
  * @author EmmCall
