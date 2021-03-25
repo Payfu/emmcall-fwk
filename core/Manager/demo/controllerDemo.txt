@@ -2,7 +2,7 @@
 namespace App\Src\%name%Bundle\Controller;
 
 use App;
-use Core\App\Vue;         
+use core\App\Vue;         
 
 /**
  * Description of %name%Controller
