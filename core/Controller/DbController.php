@@ -9,7 +9,7 @@ use App;
  * 
  * @author Emmanuel CALLEC
  */
-class DbController 
+class DbController extends App 
 {
   private $_db_instance;
   
