@@ -2,7 +2,7 @@
 namespace core\Dimholt;
 
 use core\DataBase\Config;
-use core\Tools\Tools;
+use core\Tools\Strings;
 use core\Yaml\YamlParseFilePhp;
 
 class Dimholt
@@ -48,7 +48,7 @@ class Dimholt
         'clef'        => $this->_dmlt_key,
         'id'          => $idUser,
         'ip'          => $this->getIpAddress(),
-        'user_agent'  => Tools::encodeStr($_SERVER['HTTP_USER_AGENT']),
+        'user_agent'  => Strings::encodeStr($_SERVER['HTTP_USER_AGENT']),
         'action'      => $add // Si add alors on considère que l'authentification est erronée, si false alors c'est un contrôle des datas
       )
     );
