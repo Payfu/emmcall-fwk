@@ -71,11 +71,15 @@ class Vue extends VueController
    * @param string $routeName = nom de la route
    * @param array $params = paramètres (GET) de la route 
    * @param type $str = si true alors on n'ajoute pas à la liste des variables mais on peut le sortir vers une variable externe
+   *             exemple: Vue::link(routeName:"privateIndex", str:true);
    */
-  public static function link(string $varName, string $routeName, array $params = [], $str = false){
+  public static function link(string $varName = "", string $routeName = "", array $params = [], $str = false){
     $r  = new Routing(self::$_ymlFile, null);
     if($str){
       return $r->redirectManager($routeName, $params, false);
+    }
+    if($varName == "" || $routeName == ""){
+      die("Attention: Les valeurs de Vue::link semblent incorrectes, vous devez indiquer un nom de variable et de route");
     }
     self::$_variables[$varName] = $r->redirectManager($routeName, $params, false);
   }
