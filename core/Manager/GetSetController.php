@@ -252,7 +252,7 @@ class GetSetController
       $arrayData = ["id"=> $this->__id];
     } 
 
-    return $t->update(["id"=> $this->__id], $this->constructEntity($this, __FUNCTION__, $this->_dataFields, '.$autoIncrement.'), $debug );
+    return $t->update($arrayData, $this->constructEntity($this, __FUNCTION__, $this->_dataFields, '.$autoIncrement.'), $debug );
   }';
   }
   
