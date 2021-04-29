@@ -63,6 +63,7 @@ class Vue extends VueController
   public static function redirect(string $routeName, array $params = []){
     $r  = new Routing(self::$_ymlFile, null);
     $r->redirectManager($routeName, $params, true);
+    exit;
   }
   
   /**
