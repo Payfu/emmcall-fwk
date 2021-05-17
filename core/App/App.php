@@ -79,6 +79,8 @@ class App
   public static function Load(){
     session_start();
     require_once  ROOT . '/core/App/Autoloader.php';
+    // Vendor
+    require_once ROOT . '/vendor/autoload.php';
   }
   
   /*
