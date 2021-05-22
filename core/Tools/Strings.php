@@ -33,12 +33,13 @@ class Strings
   
   /*
    * Suppression de TOUS les caractères spéciaux (accent inclus), on ne garde que les alphanum 
+   * $keepChar on indique dans une chaîne les caractère qu'on souhaiterait conserver en plus, ex pour un mail : '_@.-'
    * $replaceBy est ce qui remplacera les caractères speciaux (espace vide par défaut) et on supprime les éventuels doublons (ex: --- => -)
    */
-  public static function removeSpecChar($str, $replaceBy=false) : string
+  public static function removeSpecChar($str, $keepChar=null, $replaceBy=false) : string
   {
     $rep = $replaceBy ?? '';
-    $str = preg_replace("#[^a-zA-Z0-9]#", $rep, $str);
+    $str = preg_replace("#[^a-zA-Z0-9{$keepChar}]#", $rep, $str);
     if($replaceBy){ $str = preg_replace('#(?:(['.$rep.'])\1)\1*#', $rep, $str); }
     return $str; 
   }
