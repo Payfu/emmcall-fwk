@@ -24,15 +24,22 @@ class Dimholt
   /*
    * On check si l'identifiant et/ou l'ip sont bloqué
    */
-  public function check($idUser, $json = false){ 
+  public function check($idUser, bool $json = false){ 
     return $this->sendByPost($idUser, false, $json);
   }
   
   /*
    * En cas d'échec de connexion, on ajoute l'id ou l'ip.
    */
-  public function add($idUser, $json = false){
-    return $this->sendByPost($idUser, true, $json);
+  public function add($idUser, bool $json = false){
+    return $this->sendByPost($idUser, 'add', $json);
+  }
+  
+  /*
+   * La connexion est un succès on l'enregistre dans le journal
+   */
+  public function success($idUser, bool $json = false){
+    return $this->sendByPost($idUser, 'success', $json);
   }
   
   /*
@@ -40,8 +47,6 @@ class Dimholt
    * @action : add = on ajoute
    */
   private function sendByPost($idUser, $action = false, $json = false){
-    // qy2q1Cgw655cb86d8a93cec
-    $add = $action ? 'add' : false;
     
     $postdata = http_build_query(
       array(
@@ -49,7 +54,7 @@ class Dimholt
         'id'          => $idUser,
         'ip'          => $this->getIpAddress(),
         'user_agent'  => Strings::encodeStr($_SERVER['HTTP_USER_AGENT']),
-        'action'      => $add // Si add alors on considère que l'authentification est erronée, si false alors c'est un contrôle des datas
+        'action'      => $action // Si add alors on considère que l'authentification est erronée, si false alors c'est un contrôle des datas
       )
     );
 
@@ -63,7 +68,7 @@ class Dimholt
 
     $context = stream_context_create($opts);
     $result = file_get_contents($this->_dmlt_url, false, $context);
-    
+        
     // Si true alors on retourne un json sinon c'est un objet
     return $json ? $result : json_decode($result);
   }
