@@ -8,6 +8,7 @@ use core\Yaml\YamlParseFilePhp;
 class Dimholt
 {
   private $_dmlt_key;
+  private $_dmlt_key_admin;
   private $_dmlt_url;
   public function __construct(){
     // On charge la classe YamlParseFilePhp
@@ -18,7 +19,15 @@ class Dimholt
     $config = Config::getInstance($yamlParse);
     
     $this->_dmlt_key = $config->get('dmlt_key');
+    $this->_dmlt_key_admin  = $config->get('dmlt_key_admin');
     $this->_dmlt_url = $config->get('dmlt_url');
+  }
+  
+  /*
+   * Activation de la clef admin en remplaçant _dmlt_key par $_dmlt_key_admin
+   */
+  public function adminKey(){
+    $this->_dmlt_key = $this->_dmlt_key_admin;
   }
   
   /*
