@@ -10,6 +10,8 @@ meta:
 dimholt:
     dmlt_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     dmlt_url: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    # s'il existe une partie "admin" (ou autre) alors il faut créer un nouveau compte dans Dimholt et ajouter cette clef puis l'activer dans le script
+    dmlt_key_admin: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         
 contact:
     contact_from: contact@domaine.com
