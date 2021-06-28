@@ -17,6 +17,10 @@ require ROOT . '/config/env.php';
 
 /**
  *  Si dev, alors on affiche les erreurs
+ IMPORTANT : Pour que ces lignes fonctionnent il faut que le php.ini soit paramétré de la façon suivante :
+    error_reporting = E_ALL
+    display_errors = On
+    display_startup_errors = Off
  */
 if(ENV === 'dev'){ ini_set('display_errors', '1'); }
 
