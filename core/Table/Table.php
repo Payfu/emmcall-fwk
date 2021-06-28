@@ -211,6 +211,9 @@ class Table extends TableController
    * @cache = (temps de la mise en cache en seconde)
    */
   public function query(string $sql, $attributes = null, $one = false, string $timeCache = null, $debug = false){
+    
+    // Si $attributes est vide alors on bloque et on affiche un message
+    if(!$attributes){ $this->errorAttributes($sql); }    
     // Si debug = true alors on affiche la requête
     if($debug){ $this->debug($sql, $attributes); }
     // Si on demande de mettre en cache
@@ -241,5 +244,13 @@ class Table extends TableController
    */
   public function lastInsertId(){
     return $this->_db->lastInsertId();
+  }
+  
+  /*
+   * Message d'erreur
+   */
+  private function errorAttributes($sql){
+    echo "<b>La requete suivante doit être préparée :</b><pre>{$sql}</pre>";
+    exit;
   }
 }
